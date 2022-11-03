@@ -31,3 +31,6 @@ SCRINTN     EQU     1                       ; TIMED INTERRUPT NUMBER
 
 MENUMAXM    EQU     4                       ; MENU MAX MOVEMENTS
 
+; --- PLAYER RELATED CONSTANTS -----------------------------------------------------------
+
+PLAYERSPEED 	EQU		5						; SPEED OF MAIN PLAYER
