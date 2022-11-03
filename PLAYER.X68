@@ -11,7 +11,9 @@ PLAYERINIT
 ; ------------------------------------------------------------------------------
 	  
 	  ; *** DIBUJAMOS CUADRADO, ESTO LO PODREMOS BORRAR LUEGO AL SUSTITUIRLO POR EL JUGADOR ***
-	  MOVEM.L D0-D4, -(A7)
+            MOVE.B  D0,-(A7)
+            MOVE.L  D1,-(A7)
+	  MOVEM.W D2-D4, -(A7)
 	  
 	  MOVE.L #$00CC954E,D1 ;PEN COLOR
 	  MOVE.B #80,D0
@@ -19,15 +21,17 @@ PLAYERINIT
 	  MOVE.L #$00B53866,D1 ;FILL COLOR
 	  MOVE.B #81,D0
 	  TRAP #15
-	  CLR.L D1
 	  MOVE.W (PLAYERPOSX),D1	
 	  MOVE.W (PLAYERPOSY),D2	  
 	  MOVE.W (PLAYERWIDTH),D3	
 	  MOVE.W (PLAYERHEIGHT),D4	
 	  MOVE.B #87,D0
-	  TRAP #15 
-	  MOVEM.L (A7)+, D0-D4
-	  ; *** FIN ***
+	  TRAP #15
+
+	  MOVEM.W (A7)+,D2-D4
+            MOVE.L  (A7)+,D1	  
+            MOVE.B  (A7)+,D0
+            
             RTS
             
 ; ------------------------------------------------------------------------------
@@ -117,9 +121,31 @@ PLAYERPLOT
 	  MOVEM.L (A7)+, D0-D1    
 	  RTS
 
+PLAYERFIRE
+            ; *** DIBUJAMOS PROYECTIL (CUADRADO POR AHORA) ***
+            MOVE.B  D0,-(A7)
+            MOVE.L  D1,-(A7)
+	  MOVEM.W D2-D4, -(A7)
+	  
+	  MOVE.L #$00CC954E,D1 ;PEN COLOR
+	  MOVE.B #80,D0
+	  TRAP #15
+	  MOVE.L #$00B53866,D1 ;FILL COLOR
+	  MOVE.B #81,D0
+	  TRAP #15
+	  MOVE.W (PLAYERPOSX),D1	
+	  MOVE.W (PLAYERPOSY),D2	  
+	  MOVE.W (PLAYERWIDTH),D3	
+	  MOVE.W (PLAYERHEIGHT),D4	
+	  MOVE.B #87,D0
+	  TRAP #15
 
+	  MOVEM.W (A7)+,D2-D4
+            MOVE.L  (A7)+,D1	  
+            MOVE.B  (A7)+,D0
 
-*~Font name~Fixedsys~
-*~Font size~10~
-*~Tab type~1~
-*~Tab size~4~
+	  
+	  ; *** FIN ***
+            RTS
+            
+
