@@ -111,8 +111,8 @@ KBDUPD
 ; UPDATE KEYBOARD INFO.  
 ; 7 -> PAUSE
 ; 6 -> ACTION
-; 5 -> 
-; 4 -> 
+; 5 -> FIRE
+; 4 -> INVENTORY
 ; 3 -> DOWN
 ; 2 -> RIGHT
 ; 1 -> UP
@@ -126,10 +126,10 @@ KBDUPD
 
             ; READ FIRST PART
             MOVE.B  #19,D0
-            MOVE.L  #KBDPAUSE<<24|'C'<<16|'Z'<<8|KBDACTION,D1
+            MOVE.L  #KBDPAUSE<<24|KBDACTION<<16|KBDFIRE<<8|KBDINV,D1 ;DEVUELVE FF SI ESTÁ PULSADA LA TECLA ESPECIFICADA, 00 SI NO. 
             TRAP    #15
             
-            ; CONVERT TO DESIRED FORMAT
+            ; CONVERT TO DESIRED FORMAT (DEJA EL RESULTADO EN D2 EN EL ORDEN ESPECIFICADO ARRIBA) 
             JSR     .PACK
 
             ; READ SECOND PART
@@ -157,3 +157,5 @@ KBDUPD
             ROXL.B  #1,D2
             DBRA.W  D3,.LOOP
             RTS
+
+
