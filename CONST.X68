@@ -5,7 +5,7 @@
 ; --- SCREEN RELATED CONSTANTS -------------------------------------------------
 
 SCRWIDTH    EQU    640                     ; SCREEN WIDTH
-SCRHEIGH    EQU   320  ; 480               ; SCREEN HEIGHT
+SCRHEIGH    EQU    480               ; SCREEN HEIGHT
 SCRFPS      EQU     50                     ; SCREEN FRAMES PER SECOND
 
 ; --- KEYCODES -----------------------------------------------------------------
@@ -32,6 +32,11 @@ SCRINTN     EQU     1                       ; TIMED INTERRUPT NUMBER
 ; --- MENU CONSTANTS -----------------------------------------------------------
 
 MENUMAXM    EQU     4                       ; MENU MAX MOVEMENTS
+ELEVXL      EQU     SCRWIDTH/4              ; ELEVATOR X LEFT COORDINATE
+ELEVXR      EQU     3*SCRWIDTH/4            ; ELEVATOR X RIGHT COORDINATE
+ELEVYU      EQU     SCRHEIGH/64             ; ELEVATOR Y UP COORDINATE
+ELEVYD      EQU     63*SCRHEIGH/64          ; ELEVATOR Y DOWN COORDINATE
+TRILENGH    EQU     32                      ; LENGTH OF EACH SIDE OF EACH TRIANGLE IN THE ELEVATOR
 
 ; --- PLAYER RELATED CONSTANTS -----------------------------------------------------------
 
