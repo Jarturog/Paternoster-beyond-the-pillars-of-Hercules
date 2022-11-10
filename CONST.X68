@@ -41,6 +41,8 @@ TRILENGH    EQU     32                      ; LENGTH OF EACH SIDE OF EACH TRIANG
 ; --- PLAYER RELATED CONSTANTS -----------------------------------------------------------
 
 PLAYERSPEED 	EQU		5						; SPEED OF MAIN PLAYER
+PLAYERWIDTH	EQU	80
+PLAYERHEIGHT	EQU	80
 
 
 
