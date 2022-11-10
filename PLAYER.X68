@@ -19,20 +19,21 @@ PLAYERUPD
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
             MOVE.W  D0,-(A7)
-	    MOVE.W  #PLAYERSPEED,D0
 	  BTST #0, KBDVAL         
             BEQ	.UP    
-            NEG.W D0     
+            MOVE.W  #-PLAYERSPEED,D0     
 	  JSR	MOVEHOR	
 .UP	  BTST #1, KBDVAL			
 	  BEQ	.RIGHT  
-            NEG.W D0      
+            MOVE.W  #-PLAYERSPEED,D0      
 	  JSR	MOVEVER
 .RIGHT	  BTST #2, KBDVAL
-	  BEQ	.DOWN      
+	  BEQ	.DOWN  
+            MOVE.W  #PLAYERSPEED,D0     
 	  JSR	MOVEHOR
 .DOWN	  BTST #3, KBDVAL
-	  BEQ	.NOTMOVED      
+	  BEQ	.NOTMOVED  
+            MOVE.W  #PLAYERSPEED,D0       
 	  JSR	MOVEVER
 .NOTMOVED	  MOVE.W  (A7)+,D0
             RTS
