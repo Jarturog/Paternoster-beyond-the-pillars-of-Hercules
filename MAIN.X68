@@ -8,10 +8,15 @@
             ORG     $1000
             
             INCLUDE "CONST.X68"
+            INCLUDE "MAPCONST.X68"
             INCLUDE "SYSTEM.X68"
             INCLUDE "MENU.X68"
-            INCLUDE "VARS.X68"  
+            INCLUDE "VARS.X68" 
+            INCLUDE "MAPVARS.X68" 
             INCLUDE "PLAYER.X68"
+            INCLUDE "MAP.X68"
+            
+            
             
 START
 
@@ -21,6 +26,7 @@ START
             JSR     SYSINIT
             JSR     MENUINIT
             JSR     PLAYERINIT
+            JSR     MAPINIT
 .LOOP
 
 ; --- UPDATE -------------------------------------------------------------------
@@ -41,7 +47,8 @@ START
 
 ; --- PLOT ---------------------------------------------------------------------
 
-            JSR     MENUPLOT
+            JSR     MENUPLOT ; POR AHORA SOLO ES EL MOONCAKE Y EL ASCENSOR
+            JSR     MAPPLOT
             JSR     PLAYERPLOT
             
             TRAP    #SCRUPTN                    ; UPDATE DOUBLE BUFFER
@@ -51,3 +58,11 @@ START
             SIMHALT
             
             END     START
+
+
+
+
+*~Font name~Fixedsys~
+*~Font size~10~
+*~Tab type~1~
+*~Tab size~4~
