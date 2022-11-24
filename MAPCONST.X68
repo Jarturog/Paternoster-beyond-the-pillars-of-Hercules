@@ -6,8 +6,8 @@ NPATRONS    EQU     8                       ; NUMBER OF TILES/PATRONS
 *MAPINIY     EQU     0                       ; Y OF INITIAL SCREEN
 *MAPWIDTH    EQU     3                       ; NUMBER OF SCREENS HORIZONTALLY
 *MAPHEIGH    EQU     3                       ; NUMBER OF SCREENS VERTICALLY
-*MAPSCRW     EQU     20                      ; TILES PER SCREEN HORIZONTALLY
-*MAPSCRH     EQU     15                      ; TILES PER SCREEN VERTICALLY
+MAPSCRW     EQU     20                      ; TILES PER SCREEN HORIZONTALLY
+MAPSCRH     EQU     15                      ; TILES PER SCREEN VERTICALLY
 *MAPMINCS    EQU     2                       ; PIXELS PER CELL IN MINIMAP
 *MAPANIM0    EQU     4                       ; ANIMATED TILE 0
 *MAPANIM1    EQU     8                       ; ANIMATED TILE 1
