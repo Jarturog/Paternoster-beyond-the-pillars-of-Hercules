@@ -91,37 +91,3 @@ PLAYERPLOT
             MOVE.B  (A7)+,D0
   
 	  RTS
-
-PLAYERFIRE ; ESTE CÓDIGO NO ESTÁ ACABADO
-            ; *** DIBUJAMOS PROYECTIL (CUADRADO POR AHORA) ***
-            MOVE.B  D0,-(A7)
-            MOVE.L  D1,-(A7)
-	  MOVEM.W D2-D4, -(A7)
-	  
-	  MOVE.L #$00CC954E,D1 ;PEN COLOR
-	  MOVE.B #80,D0
-	  TRAP #15
-	  MOVE.L #$00B53866,D1 ;FILL COLOR
-	  MOVE.B #81,D0
-	  TRAP #15
-	  MOVE.W (PLAYERPOSX),D1	
-	  MOVE.W (PLAYERPOSY),D2	  
-	  MOVE.W D1,D3
-            ADD.W  #PLAYERWIDTH,D3	
-	  MOVE.W D2,D4
-            ADD.W  #PLAYERHEIGHT,D4	
-	  MOVE.B #87,D0
-	  TRAP #15
-
-	  MOVEM.W (A7)+,D2-D4
-            MOVE.L  (A7)+,D1	  
-            MOVE.B  (A7)+,D0
-
-	  
-	  ; *** FIN ***
-            RTS
-            
-
-
-
-
