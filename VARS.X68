@@ -4,7 +4,7 @@
             
 ; --- KEYBOARD RELATED VARIABLES -----------------------------------------------
             
-KBDVAL      DS.B    1                       ; KEY STATE ;PARA COMPROBAR SI ESTÁ PULSADO O NO, POR EJEMPLO MOVERSE
+KBDVAL      DS.B    1                       ; KEY STATE ;PARA COMPROBAR SI ESTÃ PULSADO O NO, POR EJEMPLO MOVERSE
 KBDEDGE     DS.B    1                       ; KEY EDGE	;PARA COMPROBAR SI SE ACABA DE PULSAR O NO, POR EJEMPLO DISPARAR
 
 ; --- MENU TEXTS ---------------------------------------------------------------
@@ -16,7 +16,7 @@ MNEXIT      DC.B    'Exit',0
 
 ; --- MENU POSITON -------------------------------------------------------------
 
-MENUPOS     DC.W    $2010   ; idealmente deberÃ­a cambiarlo para que sea relativo a SCRWIDHT y SCRHEIGH pero no me sale
+MENUPOS     DC.W    $2010   ; idealmente deberÃƒÂ­a cambiarlo para que sea relativo a SCRWIDHT y SCRHEIGH pero no me sale
 MENUMOV     DC.B    MENUMAXM/2              ; AMOUNT OF MOVIMENTS LEFT BEFORE CHANGING DIRECTION
 MENUDIR     DC.B    2
 
@@ -32,4 +32,7 @@ PLAYERHEALTH	DC.W	$64 ;100 EN HEX. DC.B ES PARA STRINGS Y DA ERROR ASI QUE USAMO
 PLAYERPOSX		DC.W	SCRWIDTH/2
 PLAYERPOSY		DC.W	SCRHEIGH/2
 
+; --- PROJECTILE RELATED VARIABLES ---------------------------------------------
+
+NPROJ       DC.W    0   ; NUMBER OF PROJECTILES
 
