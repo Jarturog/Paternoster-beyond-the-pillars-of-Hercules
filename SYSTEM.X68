@@ -14,6 +14,7 @@ SYSINIT
             MOVE.L  #KBDUPD,($80+KBDUPTN*4)
             MOVE.L  #SCRTIM,($60+SCRINTN*4)
             
+            JSR     DMMINIT
             JSR     SCRINIT
             JSR     KBDINIT
             
@@ -109,10 +110,10 @@ KBDINIT
 ; ------------------------------------------------------------------------------
 KBDUPD
 ; UPDATE KEYBOARD INFO.  
-; 7 -> PAUSE
-; 6 -> ACTION
-; 5 -> FIRE
-; 4 -> INVENTORY
+; 7 -> FIRE DOWN
+; 6 -> FIRE RIGHT
+; 5 -> FIRE UP
+; 4 -> FIRE LEFT
 ; 3 -> DOWN
 ; 2 -> RIGHT
 ; 1 -> UP
@@ -126,7 +127,7 @@ KBDUPD
 
             ; READ FIRST PART
             MOVE.B  #19,D0
-            MOVE.L  #KBDPAUSE<<24|KBDACTION<<16|KBDFIRE<<8|KBDINV,D1 ;DEVUELVE FF SI ESTÁ PULSADA LA TECLA ESPECIFICADA, 00 SI NO. 
+            MOVE.L  #KBDFDOWN<<24|KBDFRIGHT<<16|KBDFUP<<8|KBDFLEFT,D1 ;DEVUELVE FF SI ESTÃ PULSADA LA TECLA ESPECIFICADA, 00 SI NO. 
             TRAP    #15
             
             ; CONVERT TO DESIRED FORMAT (DEJA EL RESULTADO EN D2 EN EL ORDEN ESPECIFICADO ARRIBA) 
@@ -157,5 +158,4 @@ KBDUPD
             ROXL.B  #1,D2
             DBRA.W  D3,.LOOP
             RTS
-
 
