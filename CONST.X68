@@ -14,10 +14,10 @@ KBDLEFT     EQU     'A'
 KBDUP       EQU     'W'
 KBDRIGHT    EQU     'D'
 KBDDOWN     EQU     'S'
-KBDACTION   EQU     'X'
-KBDPAUSE    EQU     'P'
-KBDFIRE		EQU		'F'
-KBDINV		EQU		'E'
+KBDFLEFT    EQU     $25
+KBDFUP      EQU     $26
+KBDFRIGHT   EQU		$27
+KBDFDOWN	EQU		$28
 
 ; --- TRAP NUMBERS -------------------------------------------------------------
 
@@ -38,11 +38,15 @@ ELEVYU      EQU     SCRHEIGH/64             ; ELEVATOR Y UP COORDINATE
 ELEVYD      EQU     63*SCRHEIGH/64          ; ELEVATOR Y DOWN COORDINATE
 TRILENGH    EQU     32                      ; LENGTH OF EACH SIDE OF EACH TRIANGLE IN THE ELEVATOR
 
-; --- PLAYER RELATED CONSTANTS -----------------------------------------------------------
-
+; --- PLAYER RELATED CONSTANTS -------------------------------------------------
 PLAYERSPEED 	EQU		5						; SPEED OF MAIN PLAYER
-PLAYERWIDTH	EQU	80
-PLAYERHEIGHT	EQU	80
+PLAYERWIDTH     EQU	    80
+PLAYERHEIGHT	EQU     80
 
+; --- PROJECTILE RELATED CONSTANTS ---------------------------------------------
 
+PROJWIDTH       EQU     PLAYERWIDTH/2
+PROJHEIGHT      EQU     PLAYERHEIGHT/2
+PROJSPEEDX      EQU     8
+PROJSPEEDY      EQU     8
 
