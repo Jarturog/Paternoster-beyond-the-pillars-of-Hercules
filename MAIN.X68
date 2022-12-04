@@ -9,19 +9,21 @@
             
             INCLUDE "CONST.X68"
             INCLUDE "MAPCONST.X68"
+            INCLUDE "LIB/DMMCONST.X68"
+            
+            INCLUDE "LIB/DMMCODE.X68"
             INCLUDE "SYSTEM.X68"
+            INCLUDE "LIB/AGLCODE.X68"
+            INCLUDE "LIB/UTLCODE.X68"
             INCLUDE "MENU.X68"
-            INCLUDE "VARS.X68" 
-            INCLUDE "MAPVARS.X68" 
             INCLUDE "PLAYER.X68"
             INCLUDE "MAP.X68"
-            
-            
+            INCLUDE "PROJECTILE.X68"
             
 START
 
 ; --- INITIALIZATION -----------------------------------------------------------
-
+            
             ORI.W   #$0700,SR
             JSR     SYSINIT
             JSR     MENUINIT
@@ -38,6 +40,22 @@ START
 ; UPDATE GAME LOGIC
             JSR     MENUUPD         
             JSR     PLAYERUPD 
+            
+            MOVE.B  (KBDEDGE),D0
+            AND.B #%11110000,D0 ; SI DA CERO NO HA DISPARADO
+            BEQ.B .NOTFIRED
+            LEA     PROJINIT,A1
+            LEA     PROJUPD,A2
+            LEA     PROJPLOT,A3
+            MOVE.W  #1,D0
+            JSR     AGLADD
+.NOTFIRED
+            ; --
+            TST.W   (NPROJ)
+            BEQ     .NOPROJ1
+            JSR     AGLUPD
+.NOPROJ1
+            
 
 ; --- SYNC ---------------------------------------------------------------------
 
@@ -50,6 +68,10 @@ START
             JSR     MENUPLOT ; POR AHORA SOLO ES EL MOONCAKE Y EL ASCENSOR
             JSR     MAPPLOT
             JSR     PLAYERPLOT
+            TST.W   (NPROJ)
+            BEQ     .NOPROJ2
+            JSR     AGLPLOT
+.NOPROJ2
             
             TRAP    #SCRUPTN                    ; UPDATE DOUBLE BUFFER
 
@@ -57,12 +79,10 @@ START
 
             SIMHALT
             
+            INCLUDE "VARS.X68" 
+            INCLUDE "MAPVARS.X68"
+            INCLUDE "LIB/UTLVARS.X68"
+            INCLUDE "LIB/DMMVARS.X68"
+            
             END     START
 
-
-
-
-*~Font name~Fixedsys~
-*~Font size~10~
-*~Tab type~1~
-*~Tab size~4~
