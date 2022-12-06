@@ -9,6 +9,7 @@ KBDEDGE     DS.B    1                       ; KEY EDGE	;PARA COMPROBAR SI SE ACA
 
 ; --- MENU TEXTS ---------------------------------------------------------------
 
+MENUOVER    DC.B    0 
 MNTITLE     DC.B    'Mooncake',0
 MNPLAY      DC.B    'Play',0
 MNOPTION    DC.B    'Options',0
