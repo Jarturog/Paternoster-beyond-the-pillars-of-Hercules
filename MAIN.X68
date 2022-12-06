@@ -26,7 +26,6 @@ START
             
             ORI.W   #$0700,SR
             JSR     SYSINIT
-            JSR     MENUINIT
             JSR     PLAYERINIT
             JSR     MAPINIT
 .LOOP
@@ -38,8 +37,10 @@ START
             TRAP    #KBDUPTN
 
 ; UPDATE GAME LOGIC
+	BTST #0, MENUOVER
+	BEQ     NOMENU
             JSR     MENUUPD         
-            JSR     PLAYERUPD 
+NOMENU      JSR     PLAYERUPD 
             
             MOVE.B  (KBDEDGE),D0
             AND.B #%11110000,D0 ; SI DA CERO NO HA DISPARADO
@@ -64,9 +65,10 @@ START
             CLR.B   (SCRINTCT)
 
 ; --- PLOT ---------------------------------------------------------------------
-
-            JSR     MENUPLOT ; POR AHORA SOLO ES EL MOONCAKE Y EL ASCENSOR
-            JSR     MAPPLOT
+			BTST #0, MENUOVER
+			BEQ NOMENU1
+            JSR     MENUPLOT 
+NOMENU1     JSR     MAPPLOT
             JSR     PLAYERPLOT
             TST.W   (NPROJ)
             BEQ     .NOPROJ2
@@ -85,4 +87,5 @@ START
             INCLUDE "LIB/DMMVARS.X68"
             
             END     START
+
 
