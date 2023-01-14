@@ -13,6 +13,7 @@ SYSINIT
             MOVE.L  #SCRPLOT,($80+SCRUPTN*4)
             MOVE.L  #KBDUPD,($80+KBDUPTN*4)
             MOVE.L  #SCRTIM,($60+SCRINTN*4)
+            MOVE.L  #SCRTIM1S,($60+SCRINTFPSN*4)
             
             JSR     DMMINIT
             JSR     SCRINIT
@@ -52,15 +53,19 @@ SCRINIT
             MOVE.B  #17,D1
             TRAP    #15
             
-            ; ENABLE TIMED INTERRUPT
+            ; ENABLE BOTH TIMED INTERRUPT
             MOVE.B  #32,D0
             MOVE.B  #6,D1
             MOVE.B  #$80|SCRINTN,D2
-            MOVE.L  #1000/SCRFPS,D3
+            MOVE.L  #1000/FRAMES_PER_SECOND,D3
+            TRAP    #15
+            MOVE.B  #$80|SCRINTFPSN,D2
+            MOVE.L  #1000,D3
             TRAP    #15
             
             ; CLEAR INTERRUPT COUNTER
-            CLR.W   (SCRINTCT) 
+            CLR.W   (SCRINTCT)
+            CLR.B   (SCRINTFPS) 
             
             MOVEM.L (A7)+,D0-D3
             
@@ -73,7 +78,64 @@ SCRPLOT
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-            MOVEM.W D0-D1,-(A7)
+            MOVEM.L D0-D2,-(A7)
+            MOVE.L  A1,-(A7)
+            
+            ; PLOT ACTUAL FPS AND GOAL FPS
+            
+            MOVE.B  #81,D0
+            MOVE.L  #$00000000,D1 ; FILL COLOR
+            TRAP    #15
+            
+            MOVE.B  #80,D0
+            MOVE.L  #$00FFFFFF,D1 ; PEN COLOR
+            TRAP    #15
+            
+            MOVE.B  #11,D0
+            MOVE.L  #FPSTEXTPOS,D1 ; SET FPS TEXT POSITION
+            TRAP    #15
+            
+            LEA.L   STRFPS1,A1 
+            MOVE.B  #14,D0  ; PLOT 'GOAL: '
+            TRAP    #15
+            
+            MOVE.B  #11,D0
+            MOVE.W  #FPSTEXTPOS+9<<8,D1 ; SET NEXT FPS TEXT POSITION
+            TRAP    #15
+            
+            ADDA.L  #7,A1 ; PLOT 'FPS - ACTUAL: '
+            MOVE.B  #14,D0  
+            TRAP    #15 
+            
+            MOVE.B  #11,D0
+            MOVE.W  #FPSTEXTPOS+26<<8,D1 ; SET NEXT FPS TEXT POSITION
+            TRAP    #15
+            
+            ADDA.L  #15,A1 ; PLOT 'FPS'
+            MOVE.B  #14,D0 
+            TRAP    #15
+            
+            ADD.W   #20,D3
+            MOVE.B  #11,D0
+            MOVE.W  #FPSTEXTPOS+6<<8,D1 ; SET FPS NUMBER POSITION
+            TRAP    #15
+            
+            MOVE.L  #FRAMES_PER_SECOND,D1
+            MOVE.L  #10,D2
+            MOVE.B  #15,D0  ; PLOT GOAL NUMBER OF FPS
+            TRAP    #15
+            
+            ADD.W   #20,D3
+            MOVE.B  #11,D0
+            MOVE.W  #FPSTEXTPOS+23<<8,D1 ; SET FPS NUMBER POSITION
+            TRAP    #15
+            
+            CLR.L   D1
+            MOVE.B  (REALFPS),D1
+            MOVE.L  #10,D2
+            MOVE.B  #15,D0  ; PLOT REAL NUMBER OF FPS
+            TRAP    #15
+            
             ; SWITCH BUFFERS
             MOVE.B  #94,D0
             TRAP    #15
@@ -82,7 +144,9 @@ SCRPLOT
             MOVE.B  #11,D0
             MOVE.W  #$FF00,D1
             TRAP    #15
-            MOVEM.W (A7)+,D0-D1
+            
+            MOVE.L  (A7)+,A1
+            MOVEM.L (A7)+,D0-D2
             RTE
             
 ; ------------------------------------------------------------------------------
@@ -94,6 +158,17 @@ SCRTIM
 ; ------------------------------------------------------------------------------
             ADDQ.B  #1,(SCRINTCT)
             ADDQ.B  #1,(SCRCYCCT)
+            RTE
+            
+; ------------------------------------------------------------------------------
+SCRTIM1S
+; TIMED INTERRUPT SERVICE ROUTINE FOR ONE SECOND
+; INPUT    : NONE
+; OUTPUT   : NONE
+; MODIFIES : NONE
+; ------------------------------------------------------------------------------
+            MOVE.B  (SCRINTFPS),REALFPS
+            CLR.B   SCRINTFPS
             RTE
 
 ; ------------------------------------------------------------------------------
@@ -159,3 +234,9 @@ KBDUPD
             DBRA.W  D3,.LOOP
             RTS
 
+
+
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~1~
+*~Tab size~4~

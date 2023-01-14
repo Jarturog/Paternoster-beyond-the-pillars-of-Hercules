@@ -37,14 +37,17 @@ LOOP
             TRAP    #KBDUPTN
 
 ; UPDATE GAME LOGIC	
-	;CHECK IF MUSIC IS ALREADY PLAYING	
-		MOVE.B MUSICPLAYED, D0
-		CMP #1, D0
-		BEQ NOMUSIC
-			JSR AUDPLAY		
+
+; CHECK IF MUSIC IS ALREADY PLAYING	
+		    MOVE.B MUSICPLAYED, D0
+		    CMP #1, D0
+		    BEQ NOMUSIC
+			JSR AUDPLAY
+; GENERAL UPDATES
 NOMUSIC		JSR ELEVATORUPDATE 
         	JSR PLAYERUPD	
-			JSR MAPUPD		  
+			JSR MAPUPD
+; SHOTS LOGIC		  
             MOVE.B  (KBDEDGE),D0
             AND.B #%11110000,D0 ; SI DA CERO NO HA DISPARADO
             BEQ.B .NOTFIRED
@@ -54,14 +57,11 @@ NOMUSIC		JSR ELEVATORUPDATE
             LEA     PROJPLOT,A3
             MOVE.W  #1,D0
             JSR     AGLADD
-
 .NOTFIRED
-            ; --
             TST.W   (NPROJ)
             BEQ     .NOPROJ1
             JSR     AGLUPD
 .NOPROJ1
-            
 
 ; --- SYNC ---------------------------------------------------------------------
 
@@ -71,7 +71,7 @@ NOMUSIC		JSR ELEVATORUPDATE
 
 ; --- PLOT ---------------------------------------------------------------------
 			
-			
+            ADDQ.B  #1,(SCRINT1S)
 			JSR MAPPLOT     
             TST.W   (NPROJ)
             BEQ     .NOPROJ2
@@ -88,6 +88,8 @@ NOMUSIC		JSR ELEVATORUPDATE
             
             
             END     START
+
+
 
 
 

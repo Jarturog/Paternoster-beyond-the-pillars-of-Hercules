@@ -1,0 +1,299 @@
+000036D8 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 14/01/2023 18:53:05
+
+00000000                             1  ; ==============================================================================
+00000000                             2  ; SYSTEM
+00000000                             3  ; ==============================================================================
+00000000                             4              
+00000000                             5  ; ------------------------------------------------------------------------------
+00000000                             6  SYSINIT
+00000000                             7  ; INITIALIZE SYSTEM AND ENABLES INTERRUPTIONS
+00000000                             8  ; INPUT    : NONE
+00000000                             9  ; OUTPUT   : NONE
+00000000                            10  ; MODIFIES : NONE
+00000000                            11  ; ------------------------------------------------------------------------------
+00000000                            12  
+Line 13 ERROR: Invalid syntax
+00000000                            13              MOVE.L  #SCRPLOT,($80+SCRUPTN*4)
+Line 14 ERROR: Invalid syntax
+00000000                            14              MOVE.L  #KBDUPD,($80+KBDUPTN*4)
+Line 15 ERROR: Invalid syntax
+00000000                            15              MOVE.L  #SCRTIM,($60+SCRINTN*4)
+Line 16 ERROR: Invalid syntax
+00000000                            16              MOVE.L  #SCRTIM1S,($60+SCRINT1SN*4)
+00000000                            17              
+Line 18 ERROR: Undefined symbol
+00000000  4EB9 004DBD16             18              JSR     DMMINIT
+00000006  4EB9 00000042             19              JSR     SCRINIT
+0000000C  4EB9 0000016E             20              JSR     KBDINIT
+00000012                            21              
+00000012  40E7                      22              MOVE.W  SR,-(A7)
+00000014  0257 D8FF                 23              ANDI.W  #$D8FF,(A7)     ; ENABLES INTERRUPTIONS AND 
+00000018  4E73                      24              RTE
+0000001A                            25              
+0000001A                            26  ; ------------------------------------------------------------------------------
+Line 27 ERROR: Symbol value differs between first and second pass
+0000001A                            27  SCRINIT
+0000001A                            28  ; INIT SCREEN. SET SCREEN RESOLUTION, SET WINDOWED MODE, CLEAR SCREEN,
+0000001A                            29  ; ENABLE DOUBLE BUFFER.
+0000001A                            30  ; INPUT    : NONE
+0000001A                            31  ; OUTPUT   : NONE
+0000001A                            32  ; MODIFIES : NONE
+0000001A                            33  ; ------------------------------------------------------------------------------
+0000001A                            34  
+0000001A  48E7 F000                 35              MOVEM.L D0-D3,-(A7)
+0000001E                            36  
+0000001E                            37              ; SET SCREEN RESOLUTION
+0000001E  103C 0021                 38              MOVE.B  #33,D0
+Line 39 ERROR: Invalid syntax
+00000022                            39              MOVE.L  #SCRWIDTH<<16|SCRHEIGH,D1
+00000022  4E4F                      40              TRAP    #15
+00000024                            41              
+00000024                            42              ; SET WINDOWED MODE
+00000024  7201                      43              MOVE.L  #1,D1
+00000026  4E4F                      44              TRAP    #15
+00000028                            45              
+00000028                            46              ; CLEAR SCREEN
+00000028  103C 000B                 47              MOVE.B  #11,D0
+0000002C  323C FF00                 48              MOVE.W  #$FF00,D1
+00000030  4E4F                      49              TRAP    #15
+00000032                            50  
+00000032                            51              ; ENABLE DOUBLE BUFFER
+00000032  103C 005C                 52              MOVE.B  #92,D0
+00000036  123C 0011                 53              MOVE.B  #17,D1
+0000003A  4E4F                      54              TRAP    #15
+0000003C                            55              
+0000003C                            56              ; ENABLE BOTH TIMED INTERRUPT
+0000003C  103C 0020                 57              MOVE.B  #32,D0
+00000040  123C 0006                 58              MOVE.B  #6,D1
+Line 59 ERROR: Undefined symbol
+00000044  143C 0016                 59              MOVE.B  #$80|SCRINTN,D2
+Line 60 ERROR: Undefined symbol
+00000048  263C 004DBD16             60              MOVE.L  #1000/FRAMES_PER_SECOND,D3
+0000004E  4E4F                      61              TRAP    #15
+Line 62 ERROR: Undefined symbol
+00000050  143C 0016                 62              MOVE.B  #$80|SCRINT1SN,D2
+00000054  263C 000003E8             63              MOVE.L  #1000,D3
+0000005A  4E4F                      64              TRAP    #15
+0000005C                            65              
+0000005C                            66              ; CLEAR INTERRUPT COUNTER
+Line 67 ERROR: Undefined symbol
+0000005C  4279 004DBD16             67              CLR.W   (SCRINTCT) 
+00000062                            68              
+00000062  4CDF 000F                 69              MOVEM.L (A7)+,D0-D3
+00000066                            70              
+00000066  4E75                      71              RTS
+00000068                            72  
+00000068                            73  ; ------------------------------------------------------------------------------
+Line 74 ERROR: Symbol value differs between first and second pass
+00000068                            74  SCRPLOT
+00000068                            75  ; UPDATES DOUBLE BUFFER
+00000068                            76  ; INPUT    : NONE
+00000068                            77  ; OUTPUT   : NONE
+00000068                            78  ; MODIFIES : NONE
+00000068                            79  ; ------------------------------------------------------------------------------
+00000068  48E7 E000                 80              MOVEM.L D0-D2,-(A7)
+0000006C  2F09                      81              MOVE.L  A1,-(A7)
+0000006E                            82              
+0000006E                            83              ; PLOT ACTUAL FPS AND GOAL FPS
+0000006E                            84              
+0000006E  103C 0051                 85              MOVE.B  #81,D0
+00000072  7200                      86              MOVE.L  #$00000000,D1 ; FILL COLOR
+00000074  4E4F                      87              TRAP    #15
+00000076                            88              
+00000076  103C 0050                 89              MOVE.B  #80,D0
+0000007A  223C 00FFFFFF             90              MOVE.L  #$00FFFFFF,D1 ; PEN COLOR
+00000080  4E4F                      91              TRAP    #15
+00000082                            92              
+00000082  103C 000B                 93              MOVE.B  #11,D0
+Line 94 ERROR: Undefined symbol
+00000086  223C 004DBD16             94              MOVE.L  #FPSTEXTPOS,D1 ; SET FPS TEXT POSITION
+0000008C  4E4F                      95              TRAP    #15
+0000008E                            96              
+Line 97 ERROR: Undefined symbol
+0000008E  43F9 004DBD16             97              LEA.L   STRFPS1,A1 
+00000094  103C 000E                 98              MOVE.B  #14,D0  ; PLOT 'GOAL: '
+00000098  4E4F                      99              TRAP    #15
+0000009A                           100              
+0000009A  103C 000B                101              MOVE.B  #11,D0
+Line 102 ERROR: Invalid syntax
+0000009E                           102              MOVE.W  #FPSTEXTPOS+9<<8,D1 ; SET NEXT FPS TEXT POSITION
+0000009E  4E4F                     103              TRAP    #15
+000000A0                           104              
+000000A0  5E89                     105              ADDA.L  #7,A1 ; PLOT 'FPS - ACTUAL: '
+000000A2  103C 000E                106              MOVE.B  #14,D0  
+000000A6  4E4F                     107              TRAP    #15 
+000000A8                           108              
+000000A8  103C 000B                109              MOVE.B  #11,D0
+Line 110 ERROR: Invalid syntax
+000000AC                           110              MOVE.W  #FPSTEXTPOS+26<<8,D1 ; SET NEXT FPS TEXT POSITION
+000000AC  4E4F                     111              TRAP    #15
+000000AE                           112              
+000000AE  D3FC 0000000F            113              ADDA.L  #15,A1 ; PLOT 'FPS'
+000000B4  103C 000E                114              MOVE.B  #14,D0 
+000000B8  4E4F                     115              TRAP    #15
+000000BA                           116              
+000000BA  0643 0014                117              ADD.W   #20,D3
+000000BE  103C 000B                118              MOVE.B  #11,D0
+Line 119 ERROR: Invalid syntax
+000000C2                           119              MOVE.W  #FPSTEXTPOS+6<<8,D1 ; SET FPS NUMBER POSITION
+000000C2  4E4F                     120              TRAP    #15
+000000C4                           121              
+Line 122 ERROR: Undefined symbol
+000000C4  223C 004DBD16            122              MOVE.L  #FRAMES_PER_SECOND,D1
+000000CA  740A                     123              MOVE.L  #10,D2
+000000CC  103C 000F                124              MOVE.B  #15,D0  ; PLOT GOAL NUMBER OF FPS
+000000D0  4E4F                     125              TRAP    #15
+000000D2                           126              
+000000D2  0643 0014                127              ADD.W   #20,D3
+000000D6  103C 000B                128              MOVE.B  #11,D0
+Line 129 ERROR: Invalid syntax
+000000DA                           129              MOVE.W  #FPSTEXTPOS+23<<8,D1 ; SET FPS NUMBER POSITION
+000000DA  4E4F                     130              TRAP    #15
+000000DC                           131              
+000000DC  4281                     132              CLR.L   D1
+Line 133 ERROR: Undefined symbol
+000000DE  3239 004DBD16            133              MOVE.W  (REALFPS),D1
+000000E4  740A                     134              MOVE.L  #10,D2
+000000E6  103C 000F                135              MOVE.B  #15,D0  ; PLOT REAL NUMBER OF FPS
+000000EA  4E4F                     136              TRAP    #15
+000000EC                           137              
+000000EC                           138              ; SWITCH BUFFERS
+000000EC  103C 005E                139              MOVE.B  #94,D0
+000000F0  4E4F                     140              TRAP    #15
+000000F2                           141              
+000000F2                           142              ; CLEAR HIDDEN BUFFER
+000000F2  103C 000B                143              MOVE.B  #11,D0
+000000F6  323C FF00                144              MOVE.W  #$FF00,D1
+000000FA  4E4F                     145              TRAP    #15
+000000FC                           146              
+000000FC  225F                     147              MOVE.L  (A7)+,A1
+000000FE  4CDF 0007                148              MOVEM.L (A7)+,D0-D2
+00000102  4E73                     149              RTE
+00000104                           150              
+00000104                           151  ; ------------------------------------------------------------------------------
+Line 152 ERROR: Symbol value differs between first and second pass
+00000104                           152  SCRTIM
+00000104                           153  ; TIMED INTERRUPT SERVICE ROUTINE
+00000104                           154  ; INPUT    : NONE
+00000104                           155  ; OUTPUT   : NONE
+00000104                           156  ; MODIFIES : NONE
+00000104                           157  ; ------------------------------------------------------------------------------
+Line 158 ERROR: Undefined symbol
+00000104  5239 005455B8            158              ADDQ.B  #1,(SCRINTCT)
+Line 159 ERROR: Undefined symbol
+0000010A  5239 005455B8            159              ADDQ.B  #1,(SCRCYCCT)
+00000110  4E73                     160              RTE
+00000112                           161              
+00000112                           162  ; ------------------------------------------------------------------------------
+Line 163 ERROR: Symbol value differs between first and second pass
+00000112                           163  SCRTIM1S
+00000112                           164  ; TIMED INTERRUPT SERVICE ROUTINE FOR ONE SECOND
+00000112                           165  ; INPUT    : NONE
+00000112                           166  ; OUTPUT   : NONE
+00000112                           167  ; MODIFIES : NONE
+00000112                           168  ; ------------------------------------------------------------------------------
+Line 169 ERROR: Undefined symbol
+00000112  1039 004DBD16            169              MOVE.B  (SCRINTCT),D0
+Line 170 ERROR: Undefined symbol
+00000118  9039 004DBD16            170              SUB.B   (SCRINT1S),D0
+Line 171 ERROR: Undefined symbol
+0000011E  13C0 005455B8            171              MOVE.B  D0,REALFPS
+Line 172 ERROR: Undefined symbol
+00000124  13F9 004DBD16 005455B8   172              MOVE.B  (SCRINTCT),SCRINT1S
+0000012E  4E73                     173              RTE
+00000130                           174  
+00000130                           175  ; ------------------------------------------------------------------------------
+Line 176 ERROR: Symbol value differs between first and second pass
+00000130                           176  KBDINIT
+00000130                           177  ; INIT KEYBOARD
+00000130                           178  ; INPUT    : NONE
+00000130                           179  ; OUTPUT   : NONE
+00000130                           180  ; MODIFIES : NONE
+00000130                           181  ; ------------------------------------------------------------------------------
+Line 182 ERROR: Undefined symbol
+00000130  4239 004DBD16            182              CLR.B   (KBDVAL)
+Line 183 ERROR: Undefined symbol
+00000136  4239 004DBD16            183              CLR.B   (KBDEDGE)
+0000013C  4E75                     184              RTS
+0000013E                           185  
+0000013E                           186  ; ------------------------------------------------------------------------------
+Line 187 ERROR: Symbol value differs between first and second pass
+0000013E                           187  KBDUPD
+0000013E                           188  ; UPDATE KEYBOARD INFO.  
+0000013E                           189  ; 7 -> FIRE DOWN
+0000013E                           190  ; 6 -> FIRE RIGHT
+0000013E                           191  ; 5 -> FIRE UP
+0000013E                           192  ; 4 -> FIRE LEFT
+0000013E                           193  ; 3 -> DOWN
+0000013E                           194  ; 2 -> RIGHT
+0000013E                           195  ; 1 -> UP
+0000013E                           196  ; 0 -> LEFT
+0000013E                           197  ; INPUT    : NONE
+0000013E                           198  ; OUTPUT   : NONE
+0000013E                           199  ; MODIFIES : NONE
+0000013E                           200  ; ------------------------------------------------------------------------------
+0000013E                           201  
+0000013E  48E7 F000                202              MOVEM.L D0-D3,-(A7)
+00000142                           203  
+00000142                           204              ; READ FIRST PART
+00000142  103C 0013                205              MOVE.B  #19,D0
+Line 206 ERROR: Invalid syntax
+00000146                           206              MOVE.L  #KBDFDOWN<<24|KBDFRIGHT<<16|KBDFUP<<8|KBDFLEFT,D1 ;DEVUELVE FF SI ESTÃ PULSADA LA TECLA ESPECIFICADA, 00 SI NO. 
+00000146  4E4F                     207              TRAP    #15
+00000148                           208              
+00000148                           209              ; CONVERT TO DESIRED FORMAT (DEJA EL RESULTADO EN D2 EN EL ORDEN ESPECIFICADO ARRIBA) 
+00000148  4EB9 000001BC            210              JSR     .PACK
+0000014E                           211  
+0000014E                           212              ; READ SECOND PART
+Line 213 ERROR: Invalid syntax
+0000014E                           213              MOVE.L  #KBDDOWN<<24|KBDRIGHT<<16|KBDUP<<8|KBDLEFT,D1
+0000014E  4E4F                     214              TRAP    #15
+00000150                           215  
+00000150                           216              ; CONVERT TO DESIRED FORMAT
+00000150  4EB9 000001BC            217              JSR     .PACK
+00000156                           218              
+00000156                           219              ; COMPUTE KBDEDGE
+Line 220 ERROR: Undefined symbol
+00000156  1039 004DBD16            220              MOVE.B  (KBDVAL),D0
+0000015C  4600                     221              NOT.B   D0
+0000015E  C002                     222              AND.B   D2,D0
+Line 223 ERROR: Undefined symbol
+00000160  13C0 005455B8            223              MOVE.B  D0,(KBDEDGE)
+00000166                           224              
+00000166                           225              ; STORE KBDVAL
+Line 226 ERROR: Undefined symbol
+00000166  13C2 005455B8            226              MOVE.B  D2,(KBDVAL)
+0000016C                           227              
+0000016C  4CDF 000F                228              MOVEM.L (A7)+,D0-D3
+00000170                           229  
+00000170  4E73                     230              RTE
+00000172                           231              
+Line 232 ERROR: Symbol value differs between first and second pass
+00000172                           232  .PACK       MOVE.W  #3,D3
+Line 233 ERROR: Symbol value differs between first and second pass
+00000172                           233  .LOOP       LSL.L   #8,D1
+00000172  E312                     234              ROXL.B  #1,D2
+00000174  51CB 004A                235              DBRA.W  D3,.LOOP
+00000178  4E75                     236              RTS
+0000017A                           237  
+0000017A                           238  
+Line 239 WARNING: END directive missing, starting address not set
+
+39 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+KBDINIT             16E
+KBDUPD              17C
+KBDUPD:LOOP         1C0
+KBDUPD:PACK         1BC
+SCRINIT             42
+SCRPLOT             96
+SCRTIM              142
+SCRTIM1S            150
+SYSINIT             0
