@@ -7,7 +7,7 @@
 SCRWIDTH            EQU    640      ; SCREEN WIDTH
 SCRHEIGH            EQU    480      ; SCREEN HEIGHT
 FRAMES_PER_SECOND   EQU     50      ; DESIRED SCREEN FRAMES PER SECOND
-FPSTEXTPOS          EQU    (SCRWIDTH/15)<<8|1
+FPSTEXTPOS          EQU    (SCRWIDTH/14)<<8|1
 
 ; --- KEYCODES -----------------------------------------------------------------
 
@@ -24,7 +24,8 @@ KBDFDOWN	EQU		$28
 
 SCRUPTN     EQU     0                       ; SCREEN UPDATE TRAP NUMBER
 KBDUPTN     EQU     1                       ; KEYBOARD UPDATE TRAP NUMBER
-SNDPLTN     EQU     2                       ; SOUND PLAY TRAP NUMBER
+*MOUUPTN     EQU     2                       ; MOUSE UPDATE TRAP NUMBER         *NO SE USA PERO LO DEJO AQUÍ POR SI LE DAMOS UN USO EN UN FUTURO
+;no lo usas SNDPLTN     EQU     3                       ; SOUND PLAY TRAP NUMBER
 
 ; --- INTERRUPT NUMBERS --------------------------------------------------------
 
@@ -32,6 +33,7 @@ SCRINTN     EQU     1                       ; TIMED INTERRUPT NUMBER
 SCRINTFPSN  EQU     2                       ; 1 SECOND TIMED INTERRUPT NUMBER
 
 ; --- PLAYER RELATED CONSTANTS -------------------------------------------------
+
 PLAYERSPEED 	EQU		4						; SPEED OF MAIN PLAYER
 PLAYERWIDTH     EQU	    32
 PLAYERHEIGHT	EQU     32
@@ -43,11 +45,19 @@ PROJHEIGHT      EQU     PLAYERHEIGHT/2
 PROJSPEEDX      EQU     8
 PROJSPEEDY      EQU     8
 
-; --- MUSIC RELATED CONSTANTS ---------------------------------------------------
+; --- MUSIC RELATED CONSTANTS --------------------------------------------------
+
 HEAVENSOUND	DC.B 'SND/MUSIC1.WAV',0
 ELEVATOR_MUSIC	DC.B 'SND/ELEVATOR_MUSIC.WAV',0
 HELLSOUND	DC.B 'SND/MUSIC2.WAV',0
 PROJ_SOUND	DC.B	'SND/PROJ_SOUND.WAV',0
+
+; --- STATE RELATED CONSTANTS --------------------------------------------------
+
+STANONE     EQU     -1                      ; NON-EXISTENT STATE NUMBER
+
+
+
 
 
 

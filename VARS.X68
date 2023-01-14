@@ -41,9 +41,15 @@ MUSICPLAYED DC.B	0
 ; --- FPS RELATED VARIABLES ----------------------------------------------------
 
 REALFPS     DS.W    1
-STRFPS1     DC.B    'GOAL: ',0          ; THESE STRINGS MUST BE IN THIS ORDER IN MEMORY
+STRFPS1     DC.B    'GOAL: ',0   ; THESE STRINGS MUST BE IN THIS ORDER IN MEMORY
 STRFPS2     DC.B    'FPS - ACTUAL: ',0
 STRFPS3     DC.B    'FPS',0
+
+; --- STATE RELATED VARIABLES --------------------------------------------------
+
+STACUR      DS.W    1                       ; CURRENT STATE
+STANEXT     DS.W    1                       ; NEXT STATE
+
 
 
 

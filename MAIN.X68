@@ -8,7 +8,8 @@
             ORG     $1000
             
             INCLUDE "CONST.X68"
-            INCLUDE "LIB/DMMCONST.X68"           
+            INCLUDE "LIB/DMMCONST.X68"
+            INCLUDE "LIB/UTLCONST.X68"         
             INCLUDE "LIB/DMMCODE.X68"
             INCLUDE "SYSTEM.X68"
             INCLUDE "LIB/AGLCODE.X68"
@@ -19,7 +20,9 @@
             INCLUDE "PLAYER.X68"    
             INCLUDE "PROJECTILE.X68"
             INCLUDE "AUDIO.X68"
+            INCLUDE "STATES.X68"
             INCLUDE "GAME.X68"
+            INCLUDE "INTRO.X68"
 START
 
 ; --- INITIALIZATION -----------------------------------------------------------
@@ -27,7 +30,7 @@ START
             ORI.W   #$0700,SR
             JSR     SYSINIT
             *JSR     UTLINIT
-            JSR GAMINIT *JSR     STAINIT
+            JSR     STAINIT
 
 .LOOP
 
@@ -39,7 +42,7 @@ START
 
 ; UPDATE GAME LOGIC
 
-            JSR GAMUPD *JSR     STAUPD
+            JSR     STAUPD
 
 ; --- SYNC ---------------------------------------------------------------------
 
@@ -50,7 +53,7 @@ START
 
 ; --- PLOT ---------------------------------------------------------------------
             
-            JSR GAMPLOT *JSR     STAPLOT
+            JSR     STAPLOT
             
             TRAP    #SCRUPTN                ; UPDATE DOUBLE BUFFER
 
