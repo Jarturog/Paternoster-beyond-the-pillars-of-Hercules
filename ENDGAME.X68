@@ -1,10 +1,21 @@
 ; ==============================================================================
-; INTRO SCREEN
+; VICTORY SCREEN
 ; ==============================================================================
 
 ; ------------------------------------------------------------------------------
-ISCUPD
-; INTRO SCREEN UPDATE
+ENDGINIT
+; END GAME SCREEN INIT
+; INPUT    : NONE
+; OUTPUT   : NONE
+; MODIFIES : NONE
+; ------------------------------------------------------------------------------
+
+            ; GUARDAR SU RECORD EN UN FICHERO
+            ; LEER FICHERO QUE GUARDE LOS RECORDS Y GUARDAR EN MEMORIA
+            RTS
+; ------------------------------------------------------------------------------
+ENDGUPD
+; END GAME SCREEN UPDATE
 ; INPUT    : NONE
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
@@ -13,13 +24,14 @@ ISCUPD
             MOVE.B  #2,D1           ; MOUSE DOWN STATE
             TRAP    #15
             ANDI.B  #%00001111, D0  ; MIDDLE, DOUBLE, LEFT AND RIGHT MASK
-            BEQ.B   .DONE ; IF NO CLICK
+            BEQ.B   .DONE           ; IF NO CLICK
             MOVE.W  #1,(STANEXT)
 .DONE
             RTS
+
 ; ------------------------------------------------------------------------------
-ISCPLOT
-; INTRO SCREEN PLOT
+ENDGPLOT
+; END GAME SCREEN PLOT
 ; INPUT    : NONE
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
@@ -30,26 +42,31 @@ ISCPLOT
             MOVE.B  #81,D0
             TRAP    #15
             
-            LEA     .TITLE,A0
+            LEA     .TXT1,A0
             MOVE.B  #10,D0
             JSR     UTLPRINT
             
-            BTST.B  #4,(SCRCYCCT)
-            BEQ     .DONE
+            BTST.B  #8,(SCRCYCCT)
+            BEQ     .NOTPRINT
             
-            LEA     .HINT,A0
+            LEA     .TXT2,A0
             MOVE.B  #25,D0
             JSR     UTLPRINT
             
-.DONE       MOVEM.L (A7)+,D0-D1/A0
+.NOTPRINT
+            LEA     .TXT3,A0
+            MOVE.B  #25,D0
+            JSR     UTLPRINT
+            
+            ; MOSTRAR FICHERO QUE GUARDE LOS RECORDS
+            
+            MOVEM.L (A7)+,D0-D1/A0
 
             RTS
-.TITLE      DC.B    'PATERNOSTER: Beyond the pillars of Hercules',0
-.HINT       DC.B    'CLICK ANYWHERE TO START',0
+.TXT1       DC.B    'YOUR RECORD THIS TIME WAS',0
+.TXT2       DC.B    'CLICK ANYWHERE TO START',0
+.TXT3       DC.B    'HERE ARE THE BEST RECORDS',0
             DS.W    0
-
-
-
 
 
 

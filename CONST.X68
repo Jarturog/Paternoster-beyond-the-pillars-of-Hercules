@@ -24,7 +24,6 @@ KBDFDOWN	EQU		$28
 
 SCRUPTN     EQU     0                       ; SCREEN UPDATE TRAP NUMBER
 KBDUPTN     EQU     1                       ; KEYBOARD UPDATE TRAP NUMBER
-*MOUUPTN     EQU     2                       ; MOUSE UPDATE TRAP NUMBER         *NO SE USA PERO LO DEJO AQUÍ POR SI LE DAMOS UN USO EN UN FUTURO
 ;no lo usas SNDPLTN     EQU     3                       ; SOUND PLAY TRAP NUMBER
 
 ; --- INTERRUPT NUMBERS --------------------------------------------------------
@@ -55,6 +54,7 @@ PROJ_SOUND	DC.B	'SND/PROJ_SOUND.WAV',0
 ; --- STATE RELATED CONSTANTS --------------------------------------------------
 
 STANONE     EQU     -1                      ; NON-EXISTENT STATE NUMBER
+
 
 
 

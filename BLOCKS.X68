@@ -1,6 +1,15 @@
 *-----------------------------------------------------------
 *BLOCKS
 *-----------------------------------------------------------
+
+; -----------------------------------------------------------------------------
+BLKCOLL 
+; DETECTS BLOCK COLLISIONS
+; INPUT    - D0 TOP LEFT CORNER OF OBJECT, D1 TOP RIGHT, D2 BOTTOM RIGHT, D3 BOTTOM LEFT
+; OUTPUT   - ALL 1'S IN THE REGISTER THAT COLLIDES WITH A BLOCK THAT CANNOT BE TRAVERSED
+; MODIFIES - D1, D2, D3, D4
+; -----------------------------------------------------------------------------
+	RTS
 	
 MAPPLOT
 		MOVEM.L D0-D7, -(A7)
@@ -637,6 +646,7 @@ MAPA8
 MAP8NODOOR1
 	MOVEM.W (A7)+, D0-D4
 	RTS
+
 
 
 

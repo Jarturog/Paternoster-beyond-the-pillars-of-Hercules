@@ -36,7 +36,7 @@ PROJINIT
             ADD.W   #1,(NPROJ)
             MOVE.L  (A7)+,D0
             RTS
-            
+  
 ; ------------------------------------------------------------------------------
 PROJUPD 
 ; UPDATES THE PROJECTILE.
@@ -51,6 +51,7 @@ PROJUPD
             LSR.L   #8,D0
             ADD.W   D0,(A0) 
             MOVE.L  (A7)+,D0
+            
             RTS
     
 ; ------------------------------------------------------------------------------
@@ -84,6 +85,7 @@ PROJPLOT
             MOVE.L  (A7)+,D1	  
             MOVE.B  (A7)+,D0
             RTS
+
 
 
 *~Font name~Courier New~

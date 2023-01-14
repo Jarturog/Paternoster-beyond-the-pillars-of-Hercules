@@ -15,7 +15,7 @@
             INCLUDE "LIB/AGLCODE.X68"
             INCLUDE "LIB/UTLCODE.X68"
             INCLUDE "BLOCKS.X68"
-            INCLUDE "MAP.X68"
+            INCLUDE "MAPS.X68"
             INCLUDE "ELEVATOR_MENU.X68"           
             INCLUDE "PLAYER.X68"    
             INCLUDE "PROJECTILE.X68"
@@ -23,6 +23,7 @@
             INCLUDE "STATES.X68"
             INCLUDE "GAME.X68"
             INCLUDE "INTRO.X68"
+            INCLUDE "ENDGAME.X68"
 START
 
 ; --- INITIALIZATION -----------------------------------------------------------
@@ -66,6 +67,8 @@ START
             INCLUDE "LIB/DMMVARS.X68"
 
             END     START
+
+
 
 
 

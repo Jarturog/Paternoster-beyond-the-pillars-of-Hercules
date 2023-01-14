@@ -12,14 +12,12 @@ SYSINIT
 
             MOVE.L  #SCRPLOT,($80+SCRUPTN*4)
             MOVE.L  #KBDUPD,($80+KBDUPTN*4)
-            *MOVE.L  #MOUUPD,($80+MOUUPTN*4) *NO SE USA PERO LO DEJO AQUÍ POR SI LE DAMOS UN USO EN UN FUTURO
             MOVE.L  #SCRTIM,($60+SCRINTN*4)
             MOVE.L  #SCRTIM1S,($60+SCRINTFPSN*4)
             
             JSR     DMMINIT
             JSR     SCRINIT
             JSR     KBDINIT 
-            *JSR     MOUINIT *NO SE USA PERO LO DEJO AQUÍ POR SI LE DAMOS UN USO EN UN FUTURO
             
             MOVE.W  SR,-(A7)
             ANDI.W  #$D8FF,(A7)     ; ENABLES INTERRUPTIONS AND 
@@ -235,31 +233,6 @@ KBDUPD
             ROXL.B  #1,D2
             DBRA.W  D3,.LOOP
             RTS
-*   NO SE USA PERO LO DEJO AQUÍ POR SI LE DAMOS UN USO EN UN FUTURO
-*; ------------------------------------------------------------------------------
-*MOUINIT
-*; INIT MOUSE
-*; INPUT    : NONE
-*; OUTPUT   : NONE
-*; MODIFIES : NONE
-*; ------------------------------------------------------------------------------
-*            RTS
-*
-*
-*; ------------------------------------------------------------------------------
-*MOUUPD
-*; UPDATE MOUSE DOWN INFO  
-*; INPUT    : NONE
-*; OUTPUT   : NONE
-*; MODIFIES : NONE
-*; ------------------------------------------------------------------------------
-*            MOVE.B  #61,D0          ; READ MOUSE
-*            MOVE.B  #2,D1           ; MOUSE DOWN STATE
-*            TRAP    #15
-*            
-*            RTS
-*
-*
 
 
 
