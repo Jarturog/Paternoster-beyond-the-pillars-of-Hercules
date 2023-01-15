@@ -49,7 +49,6 @@ AUDPLAY
 	       MOVEA.W D1, A1
 	       JMP MSCSEL(A1)
 MSCSEL:
-		   JMP ELEVATORMUSIC
 		   
 		   JMP HEAVENMUSIC
 		   
@@ -69,12 +68,12 @@ MSCSEL:
 	       
 
 ELEVATORMUSIC
+    MOVEM.W D0-D2 ,-(A7)
 	MOVE.B #76, D0
 	MOVE.B #0, D1
 	MOVE.L #0, D2
 	TRAP #15
-	MOVEM.W (A7)+, A0-A1
-	MOVEM.L (A7)+, D0-D2
+	MOVEM.W (A7)+, D0-D2 
 	MOVE.B #1, MUSICPLAYED
 	RTS
 
@@ -112,6 +111,7 @@ FIREDSOUND
 	MOVEM.W (A7)+, A0-A1
 	MOVEM.W (A7)+, D0-D2
 	RTS
+
 *~Font name~Fixedsys~
 *~Font size~9~
 *~Tab type~1~

@@ -10,15 +10,15 @@ ISBLWHICHCOLL
 ; MODIFIES - D4.L, A0
 ; -----------------------------------------------------------------------------
             LEA.L   BLWHICHCOLL, A0
-.BNEXTCHCK  CMP.B   (A0),D4
-            BEQ.B   .BCOLL
-            TST.B   (A0)
+.BNEXTCHCK  TST.B   (A0)
             BEQ.B   .BNOCOLL
+            CMP.B   (A0),D4
+            BEQ.B   .BCOLL
             ADDA.L  #1,A0
             BRA     .BNEXTCHCK
 .BCOLL      ORI.L   #$FFFFFFFF, D4
             BRA     .BEND
-.BNOCOLL    CLR.L   D0
+.BNOCOLL    CLR.L   D4
 .BEND
             RTS
 
@@ -33,7 +33,7 @@ BLKCOLL
 ;            RIGHT LOWER BLOCK
 ; MODIFIES - D0.L, D1.L, D2.L, D3.L
 ; -----------------------------------------------------------------------------
-            MOVEM.L D4-D5/A0,-(A7)
+            MOVEM.L D4-D6/A0,-(A7)
             
             MOVE.L  #16,D4
             MOVE.W  D0,D2   ; D2 CONTAINS X LEFT
@@ -41,10 +41,15 @@ BLKCOLL
             MOVE.W  D1,D3   ; D3 CONTAINS X RIGHT
             LSR.L   D4,D1   ; D1 CONTAINS Y LOWER
             
-            DIVU.W  #BLOCKSIZE,D0   ; UPPER BLOCK
-            DIVU.W  #BLOCKSIZE,D1   ; LOWER BLOCK
-            DIVU.W  #BLOCKSIZE,D2   ; LEFT BLOCK
-            DIVU.W  #BLOCKSIZE,D3   ; RIGHT BLOCK
+            EXT.L   D0
+            EXT.L   D1
+            EXT.L   D2
+            EXT.L   D3
+            
+            DIVU.W  #BLOCKSIZE,D0   ; LEFT BLOCK
+            DIVU.W  #BLOCKSIZE,D1   ; RIGHT BLOCK
+            DIVU.W  #BLOCKSIZE,D2   ; UPPER BLOCK
+            DIVU.W  #BLOCKSIZE,D3   ; LOWER BLOCK
             
             EXT.L   D0
             EXT.L   D1
@@ -52,28 +57,36 @@ BLKCOLL
             EXT.L   D3
             
             MOVE.L  #BLOCKSROW+1,D4 ; +1 BECAUSE OF NULL
-            MULU.W  D0,D4           ; INDEX OF COLUMN OF UPPER LEFT AND RIGHT BLOCKS
+            MULU.W  D2,D4           ; INDEX OF COLUMN OF UPPER LEFT AND RIGHT BLOCKS
             MOVE.L  #BLOCKSROW+1,D5 ; +1 BECAUSE OF NULL
-            MULU.W  D1,D5           ; INDEX OF COLUMN OF LOWER LEFT AND RIGHT BLOCKS
+            MULU.W  D3,D5           ; INDEX OF COLUMN OF LOWER LEFT AND RIGHT BLOCKS
             
-            LEA.L   LOADEDMAP,A0
-            ADDA.L  D4,A0   
-            ADDA.L  D2,A0           ; LEFT UPPER BLOCK
-            MOVE.B  (A0),D0         ; STORING TOP LEFT BLOCK IN D0
+            MOVE.W  (LOADEDMAP),D6
+            EXT.L   D6
+            MULU    #4,D6
+            LEA.L   MAPLIST,A0
+            ADDA.L  D6,A0
+            MOVEA.L (A0),A0         ; CURRENT MAP ADDRESS
             
-            SUBA.L  D2,A0   
-            ADDA.L  D3,A0           ; RIGHT UPPER BLOCK
-            MOVE.B  (A0),D1         ; STORING TOP RIGHT BLOCK IN D1
+            MOVEA.L A0,A1
+            ADDA.L  D5,A1   
+            ADDA.L  D1,A1           ; RIGHT LOWER BLOCK
+            MOVE.B  (A1),D3         ; STORING BOTTOM RIGHT BLOCK IN D3
             
-            LEA.L   LOADEDMAP,A0
-            ADDA.L  D5,A0   
-            ADDA.L  D2,A0           ; LEFT LOWER BLOCK
-            MOVE.B  (A0),D2         ; STORING BOTTOM LEFT BLOCK IN D2
+            MOVEA.L A0,A1
+            ADDA.L  D5,A1   
+            ADDA.L  D0,A1           ; LEFT LOWER BLOCK
+            MOVE.B  (A1),D2         ; STORING BOTTOM LEFT BLOCK IN D2
             
-            LEA.L   LOADEDMAP,A0
-            ADDA.L  D5,A0   
-            ADDA.L  D3,A0           ; RIGHT LOWER BLOCK
-            MOVE.B  (A0),D3         ; STORING BOTTOM RIGHT BLOCK IN D3
+            MOVEA.L A0,A1
+            ADDA.L  D4,A1   
+            ADDA.L  D1,A1           ; RIGHT UPPER BLOCK
+            MOVE.B  (A1),D1         ; STORING TOP RIGHT BLOCK IN D1
+            
+            MOVEA.L A0,A1
+            ADDA.L  D4,A1   
+            ADDA.L  D0,A1           ; LEFT UPPER BLOCK
+            MOVE.B  (A1),D0         ; STORING TOP LEFT BLOCK IN D0
             
             MOVE.B  D0,D4
             JSR     ISBLWHICHCOLL
@@ -91,7 +104,7 @@ BLKCOLL
             JSR     ISBLWHICHCOLL
             MOVE.L  D4,D3
             
-            MOVEM.L (A7)+,D4-D5/A0
+            MOVEM.L (A7)+,D4-D6/A0
             
             RTS
 
@@ -109,8 +122,6 @@ MAPPLOT
 	       MOVEA.W D1, A1
 	       JMP MAPSEL(A1)
 MAPSEL:
-		   JMP ELEVATORPLOT
-		   JMP NEXT
 		   LEA HEAVEN_0, A0
 		   JMP NEXT
 		   LEA HEAVEN_1, A0
@@ -131,31 +142,19 @@ MAPSEL:
 MAPUPD
 ; INPUT    - 
 ; OUTPUT   - 
-; MODIFIES - 
+; MODIFIES - A0
 ; -----------------------------------------------------------------------------
+			MOVE.W D0,-(A7)
 			
-			MOVE.W D0, -(A7)
-			MOVE.W LOADEDMAP, D0
-			CMP #1, D0
-			BEQ MAPA1
-			CMP #2, D0
-			BEQ MAPA2
-			CMP #3, D0
-			BEQ MAPA3
-			CMP #4, D0
-			BEQ MAPA4
-			CMP #5, D0
-			BEQ MAPA5
-			CMP #6, D0
-			BEQ MAPA6
-			CMP #7, D0
-			BEQ MAPA7
-			CMP #8, D0
-			BEQ MAPA8
-			MOVE.W (A7)+, D0
-			RTS
+			MOVE.W  LOADEDMAP, D0
+			
+			EXT.L   D0
+			MULU    #4,D0
+			LEA.L   MAPUPDLIST,A0
+			ADDA.L  D0,A0
+			MOVEA.L (A0),A0
+			JMP     (A0)
 
-	
 			
 NEXT
 		   CLR.L D1
@@ -484,7 +483,7 @@ MAPA1
 	CMP #448, D1
 	BLT MAP1NODOOR
 	MOVE.W #32, PLAYERPOSY
-	MOVE.W #2, LOADEDMAP
+	MOVE.W #1, LOADEDMAP
 MAP1NODOOR
 	MOVEM.W (A7)+, D0-D4
 	RTS
@@ -506,7 +505,7 @@ MAPA2
 	CMP #448, D1
 	BLT MAP2NODOOR1
 	MOVE.W #32, PLAYERPOSY
-	MOVE.W #3, LOADEDMAP
+	MOVE.W #2, LOADEDMAP
 	MOVEM.W (A7)+, D0-D4
 	RTS
 MAP2NODOOR1
@@ -522,7 +521,7 @@ MAP2NODOOR1
 	CMP #0, D1
 	BLT MAP2NODOOR2
 	MOVE.W  #416, PLAYERPOSY
-	MOVE.W #1, LOADEDMAP
+	MOVE.W #0, LOADEDMAP
 	MOVEM.W (A7)+, D0-D4
 	RTS
 
@@ -539,7 +538,7 @@ MAP2NODOOR2
 	BLT MAP2NODOOR3
 	MOVE.W #$130, PLAYERPOSX
 	MOVE.W #$0B0, PLAYERPOSY
-	MOVE.W #4, LOADEDMAP
+	MOVE.W #3, LOADEDMAP
 	MOVEM.W (A7)+, D0-D4
 	RTS
 MAP2NODOOR3
@@ -555,7 +554,7 @@ MAP2NODOOR3
 	BLT MAP2NODOOR4
 	MOVE.W #$130, PLAYERPOSX
 	MOVE.W #$0B0, PLAYERPOSY
-	MOVE.W #4, LOADEDMAP
+	MOVE.W #3, LOADEDMAP
 	MOVEM.W (A7)+, D0-D4
 	RTS
 MAP2NODOOR4
@@ -578,7 +577,7 @@ MAPA3
 	CMP #0, D1
 	BLT MAP3NODOOR
 	MOVE.W  #416, PLAYERPOSY
-	MOVE.W #2, LOADEDMAP
+	MOVE.W #1, LOADEDMAP
 	MOVEM.W (A7)+, D0-D4
 	RTS
 MAP3NODOOR
@@ -600,7 +599,7 @@ MAPA4
 	CMP #96, D1
 	BLT MAP4NODOOR
 	MOVE.W  #224, PLAYERPOSX
-	MOVE.W #2, LOADEDMAP
+	MOVE.W #1, LOADEDMAP
 MAP4NODOOR
 	MOVEM.W (A7)+, D0-D4
 	RTS
@@ -622,7 +621,7 @@ MAPA5
 	CMP #448, D1
 	BLT MAP5NODOOR
 	MOVE.W #32, PLAYERPOSY
-	MOVE.W #6, LOADEDMAP
+	MOVE.W #5, LOADEDMAP
 MAP5NODOOR
 	MOVEM.W (A7)+, D0-D4
 	RTS
@@ -644,7 +643,7 @@ MAPA6
 	CMP #448, D1
 	BLT MAP6NODOOR1
 	MOVE.W #32, PLAYERPOSY
-	MOVE.W #7, LOADEDMAP
+	MOVE.W #6, LOADEDMAP
 	MOVEM.W (A7)+, D0-D4
 	RTS
 MAP6NODOOR1
@@ -660,7 +659,7 @@ MAP6NODOOR1
 	CMP #0, D1
 	BLT MAP6NODOOR2
 	MOVE.W  #416, PLAYERPOSY
-	MOVE.W #5, LOADEDMAP
+	MOVE.W #4, LOADEDMAP
 	MOVEM.W (A7)+, D0-D4
 	RTS
 MAP6NODOOR2
@@ -676,7 +675,7 @@ MAP6NODOOR2
 	BLT MAP6NODOOR3
 	MOVE.W #$130, PLAYERPOSX
 	MOVE.W #$0B0, PLAYERPOSY
-	MOVE.W #8, LOADEDMAP
+	MOVE.W #7, LOADEDMAP
 	MOVEM.W (A7)+, D0-D4
 	RTS
 MAP6NODOOR3
@@ -692,7 +691,7 @@ MAP6NODOOR3
 	BLT MAP6NODOOR4
 	MOVE.W #$130, PLAYERPOSX
 	MOVE.W #$0B0, PLAYERPOSY
-	MOVE.W #8, LOADEDMAP
+	MOVE.W #7, LOADEDMAP
 	MOVEM.W (A7)+, D0-D4
 	RTS
 MAP6NODOOR4
@@ -715,7 +714,7 @@ MAPA7
 	BLT MAP7NODOOR
 	MOVE.W  #320, PLAYERPOSX
 	MOVE.W #416, PLAYERPOSY
-	MOVE.W #6, LOADEDMAP
+	MOVE.W #5, LOADEDMAP
 MAP7NODOOR
 	MOVEM.W (A7)+, D0-D4
 	RTS
@@ -737,10 +736,14 @@ MAPA8
 	BLT MAP8NODOOR1
 	MOVE.W  #320, PLAYERPOSX
 	MOVE.W #128, PLAYERPOSY
-	MOVE.W #6, LOADEDMAP
+	MOVE.W #5, LOADEDMAP
 MAP8NODOOR1
 	MOVEM.W (A7)+, D0-D4
 	RTS
+
+
+
+
 
 
 

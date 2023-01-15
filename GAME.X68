@@ -3,17 +3,6 @@
 ; ==============================================================================
 
 ; ------------------------------------------------------------------------------
-GAMINIT
-; INITIALIZES GAME.
-; INPUT    : NONE
-; OUTPUT   : NONE
-; MODIFIES : NONE
-; ------------------------------------------------------------------------------
-           * CLR.W LOADEDMAP
-            JSR     PLAYERINIT
-            BRA 	AUDINIT
-
-; ------------------------------------------------------------------------------
 GAMUPD
 ; UPDATES THE GAME
 ; INPUT    : NONE
@@ -60,6 +49,7 @@ GAMPLOT
             BEQ     .NOPROJ2
             JSR     AGLPLOT
 .NOPROJ2    BRA     PLAYERPLOT
+
 
 
 

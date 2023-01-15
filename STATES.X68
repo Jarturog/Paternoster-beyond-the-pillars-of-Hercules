@@ -38,7 +38,7 @@ STAUPD
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.INITBL     DC.L    STAEMPTY,STAEMPTY,GAMINIT,ENDGINIT
+.INITBL     DC.L    STAEMPTY,ELEVATORINIT,STAEMPTY,ENDGINIT
 .UPDTBL     DC.L    ISCUPD,ELEVATORUPDATE,GAMUPD,ENDGUPD
 
 ; -----------------------------------------------------------------------------
@@ -68,6 +68,7 @@ STAEMPTY
 ; NOTE     - JUST A PLACEHOLDER. NOTHING TO DO.
 ; -----------------------------------------------------------------------------
             RTS
+
 
 
 

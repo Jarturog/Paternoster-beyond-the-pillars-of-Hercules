@@ -25,14 +25,19 @@ PLAYERPOSY		DC.W	SCRHEIGH/2
 
 NPROJ       DC.W    0   ; NUMBER OF PROJECTILES
 
+; --- BLOCKS RELATED VARIABLES -------------------------------------------------
+
+BPOSX1	    DC.W	0
+BPOSY1	    DC.W	0
+BPOSX2	    DC.W	32
+BPOSY2	    DC.W	32
+BLWHICHCOLL DC.B    2,3,0 ; BLOCKS WHICH PRODUCES COLLISIONS, ENDS WITH NULL
+
 ; --- MAP RELATED VARIABLES ----------------------------------------------------
 
-BPOSX1	DC.W	0
-BPOSY1	DC.W	0
-BPOSX2	DC.W	32
-BPOSY2	DC.W	32
 LOADEDMAP	DC.W	0                       ; CURRENT MAP
-BLWHICHCOLL DC.B    3,0 ; BLOCKS WHICH PRODUCES COLLISIONS, ENDS WITH NULL
+MAPUPDLIST  DC.L    MAPA1,MAPA2,MAPA3,MAPA4,MAPA5,MAPA6,MAPA7,MAPA8
+MAPLIST     DC.L    HEAVEN_0,HEAVEN_1,HEAVEN_END,HEAVEN_ROOM,HELL_0,HELL_1,HELL_END,HELL_ROOM,0 
 
 ; --- MUSIC RELATED VARIABLES --------------------------------------------------
 
@@ -50,6 +55,11 @@ STRFPS3     DC.B    'FPS',0
 
 STACUR      DS.W    1                       ; CURRENT STATE
 STANEXT     DS.W    1                       ; NEXT STATE
+
+
+
+
+
 
 
 

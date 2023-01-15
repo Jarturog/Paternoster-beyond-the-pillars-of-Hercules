@@ -16,7 +16,7 @@
             INCLUDE "LIB/UTLCODE.X68"
             INCLUDE "BLOCKS.X68"
             INCLUDE "MAPS.X68"
-            INCLUDE "ELEVATOR_MENU.X68"           
+            INCLUDE "ELEVATOR.X68"           
             INCLUDE "PLAYER.X68"    
             INCLUDE "PROJECTILE.X68"
             INCLUDE "AUDIO.X68"
@@ -30,7 +30,6 @@ START
 
             ORI.W   #$0700,SR
             JSR     SYSINIT
-            *JSR     UTLINIT
             JSR     STAINIT
 
 .LOOP
@@ -67,6 +66,7 @@ START
             INCLUDE "LIB/DMMVARS.X68"
 
             END     START
+
 
 
 

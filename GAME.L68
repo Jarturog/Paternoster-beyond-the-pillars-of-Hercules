@@ -1,0 +1,106 @@
+00003A36 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 15/01/2023 13:20:41
+
+00000000                             1  ; ==============================================================================
+00000000                             2  ; GAME MANAGEMENT
+00000000                             3  ; ==============================================================================
+00000000                             4  
+00000000                             5  ; ------------------------------------------------------------------------------
+00000000                             6  GAMINIT
+00000000                             7  ; INITIALIZES GAME.
+00000000                             8  ; INPUT    : NONE
+00000000                             9  ; OUTPUT   : NONE
+00000000                            10  ; MODIFIES : NONE
+00000000                            11  ; ------------------------------------------------------------------------------
+00000000                            12             * CLR.W LOADEDMAP
+Line 13 ERROR: Undefined symbol
+00000000  4EB9 004DBD16             13              JSR     PLAYERINIT
+Line 14 ERROR: Undefined symbol
+00000006  6000 BD0E                 14              BRA     AUDINIT
+0000000A                            15  
+0000000A                            16  ; ------------------------------------------------------------------------------
+0000000A                            17  GAMUPD
+0000000A                            18  ; UPDATES THE GAME
+0000000A                            19  ; INPUT    : NONE
+0000000A                            20  ; OUTPUT   : NONE
+0000000A                            21  ; MODIFIES : NONE
+0000000A                            22  ; ------------------------------------------------------------------------------
+0000000A  48E7 8070                 23              MOVEM.L D0/A1-A3,-(A7)
+0000000E                            24              
+0000000E                            25              ; CHECK IF MUSIC IS ALREADY PLAYING 
+Line 26 ERROR: Undefined symbol
+0000000E  1039 004DBD16             26              MOVE.B MUSICPLAYED, D0
+00000014  B07C 0001                 27              CMP #1, D0
+00000018  6700 0008                 28              BEQ .NOMUSIC
+Line 29 ERROR: Undefined symbol
+0000001C  4EB9 004DBD16             29              JSR AUDPLAY
+00000022                            30  ; GENERAL UPDATES
+Line 31 ERROR: Undefined symbol
+00000022  4EB9 004DBD16             31  .NOMUSIC    JSR PLAYERUPD   
+Line 32 ERROR: Undefined symbol
+00000028  4EB9 004DBD16             32              JSR MAPUPD
+0000002E                            33  ; SHOTS LOGIC         
+Line 34 ERROR: Undefined symbol
+0000002E  1039 004DBD16             34              MOVE.B  (KBDEDGE),D0
+00000034  C03C 00F0                 35              AND.B #%11110000,D0 ; SI DA CERO NO HA DISPARADO
+00000038  6722                      36              BEQ.B .NOTFIRED
+Line 37 ERROR: Undefined symbol
+0000003A  4EB9 004DBD16             37              JSR FIREDSOUND
+Line 38 ERROR: Undefined symbol
+00000040  43F9 004DBD16             38              LEA     PROJINIT,A1
+Line 39 ERROR: Undefined symbol
+00000046  45F9 004DBD16             39              LEA     PROJUPD,A2
+Line 40 ERROR: Undefined symbol
+0000004C  47F9 004DBD16             40              LEA     PROJPLOT,A3
+00000052  303C 0001                 41              MOVE.W  #1,D0
+Line 42 ERROR: Undefined symbol
+00000056  4EB9 004DBD16             42              JSR     AGLADD
+0000005C                            43  .NOTFIRED
+Line 44 ERROR: Undefined symbol
+0000005C  4A79 004DBD16             44              TST.W   (NPROJ)
+00000062  6700 0008                 45              BEQ     .NOPROJ1
+Line 46 ERROR: Undefined symbol
+00000066  4EB9 004DBD16             46              JSR     AGLUPD
+0000006C                            47  .NOPROJ1
+0000006C  4CDF 0E01                 48              MOVEM.L (A7)+,D0/A1-A3
+00000070  4E75                      49              RTS
+00000072                            50  
+00000072                            51  ; ------------------------------------------------------------------------------
+00000072                            52  GAMPLOT
+00000072                            53  ; PLOTS THE GAME
+00000072                            54  ; INPUT    : NONE
+00000072                            55  ; OUTPUT   : NONE
+00000072                            56  ; MODIFIES : NONE
+00000072                            57  ; ------------------------------------------------------------------------------
+Line 58 ERROR: Undefined symbol
+00000072  4EB9 004DBD16             58              JSR MAPPLOT     
+Line 59 ERROR: Undefined symbol
+00000078  4A79 004DBD16             59              TST.W   (NPROJ)
+0000007E  6700 0008                 60              BEQ     .NOPROJ2
+Line 61 ERROR: Undefined symbol
+00000082  4EB9 004DBD16             61              JSR     AGLPLOT
+Line 62 ERROR: Undefined symbol
+00000088  6000 BC8C                 62  .NOPROJ2    BRA     PLAYERPLOT
+0000008C                            63  
+0000008C                            64  
+0000008C                            65  
+0000008C                            66  
+0000008C                            67  
+0000008C                            68  
+Line 69 WARNING: END directive missing, starting address not set
+
+18 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+GAMINIT             0
+GAMPLOT             72
+GAMPLOT:NOPROJ2     88
+GAMUPD              A
+GAMUPD:NOMUSIC      22
+GAMUPD:NOPROJ1      6C
+GAMUPD:NOTFIRED     5C
