@@ -55,6 +55,16 @@ PROJ_SOUND	DC.B	'SND/PROJ_SOUND.WAV',0
 
 STANONE     EQU     -1                      ; NON-EXISTENT STATE NUMBER
 
+; --- MAP RELATED CONSTANTS ----------------------------------------------------
+
+BLOCKSROW   EQU     20                      ; BLOCKS PER ROW
+BLOCKSCOL   EQU     15                      ; BLOCKS PER COLUMN
+BLOCKSIZE   EQU     32                      ; BLOCK SIZE IN PIXELS
+
+; --- ELEVATOR RELATED CONSTANTS -----------------------------------------------
+
+COLBUTHL	EQU	    $000000CC
+COLBUTHV	EQU	    $00EEEEEE
 
 
 

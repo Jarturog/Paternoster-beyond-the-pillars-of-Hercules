@@ -31,7 +31,8 @@ BPOSX1	DC.W	0
 BPOSY1	DC.W	0
 BPOSX2	DC.W	32
 BPOSY2	DC.W	32
-LOADEDMAP	DC.W	0
+LOADEDMAP	DC.W	0                       ; CURRENT MAP
+BLWHICHCOLL DC.B    3,0 ; BLOCKS WHICH PRODUCES COLLISIONS, ENDS WITH NULL
 
 ; --- MUSIC RELATED VARIABLES --------------------------------------------------
 
@@ -49,6 +50,8 @@ STRFPS3     DC.B    'FPS',0
 
 STACUR      DS.W    1                       ; CURRENT STATE
 STANEXT     DS.W    1                       ; NEXT STATE
+
+
 
 
 

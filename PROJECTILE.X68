@@ -44,16 +44,43 @@ PROJUPD
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-            MOVE.L  D0,-(A7)
+            MOVEM.L  D0-D3,-(A7)
             MOVE.L  4(A0),D0 ; COMO X E Y ESTÁN JUNTOS EN MEMORIA HAGO UNA SOLA OPERACIÓN LONG WORD
             ADD.W   D0,2(A0)
             LSR.L   #8,D0 ; LAS SUMAS SE TIENEN QUE HACER APARTE PARA QUE SI HAY OVERFLOW NO SE AFECTEN ENTRE ELLAS
             LSR.L   #8,D0
             ADD.W   D0,(A0) 
-            MOVE.L  (A7)+,D0
             
+            ; CHECK COLLISIONS
+            ; TOP LEFT CORNER
+            MOVE.W  (A0),D0
+            LSL.L   #8,D0
+            LSL.L   #8,D0
+            MOVE.W  2(A0),D0
+            
+            MOVE.W  (A0),D1
+            ADD.W   #PROJWIDTH,D1
+            LSL.L   #8,D1
+            LSL.L   #8,D1
+            MOVE.W  2(A0),D1
+            ADD.W   #PROJHEIGHT,D1
+
+            JSR BLKCOLL
+            TST.L   D0
+            BNE.L   .PROJCOLL
+            TST.L   D1
+            BNE.L   .PROJCOLL
+            TST.L   D2
+            BNE.L   .PROJCOLL
+            TST.L   D3
+            BNE.L   .PROJCOLL
+.PROJNOCOLL             
+            MOVEM.L  (A7)+,D0-D3
             RTS
-    
+            
+.PROJCOLL   JSR AGLKILL
+            SUB.W   #1,(NPROJ)
+            BRA     .PROJNOCOLL
 ; ------------------------------------------------------------------------------
 PROJPLOT 
 ; PLOTS THE PROJECTILE.
@@ -85,6 +112,7 @@ PROJPLOT
             MOVE.L  (A7)+,D1	  
             MOVE.B  (A7)+,D0
             RTS
+
 
 
 

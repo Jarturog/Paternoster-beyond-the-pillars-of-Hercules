@@ -9,7 +9,7 @@ GAMINIT
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-            CLR.W LOADEDMAP
+           * CLR.W LOADEDMAP
             JSR     PLAYERINIT
             BRA 	AUDINIT
 
@@ -25,11 +25,10 @@ GAMUPD
             ; CHECK IF MUSIC IS ALREADY PLAYING	
 		    MOVE.B MUSICPLAYED, D0
 		    CMP #1, D0
-		    BEQ NOMUSIC
+		    BEQ .NOMUSIC
 			JSR AUDPLAY
 ; GENERAL UPDATES
-NOMUSIC		JSR ELEVATORUPDATE 
-        	JSR PLAYERUPD	
+.NOMUSIC	JSR PLAYERUPD	
 			JSR MAPUPD
 ; SHOTS LOGIC		  
             MOVE.B  (KBDEDGE),D0
@@ -61,6 +60,7 @@ GAMPLOT
             BEQ     .NOPROJ2
             JSR     AGLPLOT
 .NOPROJ2    BRA     PLAYERPLOT
+
 
 
 

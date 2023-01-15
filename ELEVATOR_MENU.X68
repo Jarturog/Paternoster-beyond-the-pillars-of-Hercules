@@ -1,11 +1,8 @@
-COLBUTHL	EQU	$000000CC
-COLBUTHV	EQU	$00EEEEEE
 
-	DC.B 1
+
 ELEVATORPLOT
 	
-	MOVEM.L (A7)+, A0-A6
-    MOVEM.L (A7)+, D0-D7
+	MOVEM.L D0-D7/A0-A6,-(A7)
 
 
 ;SET PEN COLOR 	
@@ -177,11 +174,10 @@ ELEVATORPLOT
     MOVE.W (A7)+, D6
 ;DRAW UPWARDS TRIANGLE FOR ELEVATOR BUTTON 2
    ;SET FILL COLOR
-   MOVEM.L D0-D7/A0-A6, -(A7)
    MOVE.B #81, D0
    MOVE.L #COLBUTHV, D1
    TRAP #15
-   MOVEM.L (A7)+, D0-D7/A0-A6
+   
     ;END SET FILL COLOR
    MOVE.W #249, -(A7) ;COORDENADA Y 
    MOVE.W #310, -(A7) ;320 ES EL CENTRO. LA LONGITUD SERA 22 
@@ -190,7 +186,7 @@ ELEVATORPLOT
    MOVE.W (A7)+, D6
    MOVE.W (A7)+, D6
    MOVE.W (A7)+, D6
-   ;MOVEM.L (A7)+, D0-D7/A0-A6
+   MOVEM.L (A7)+, D0-D7/A0-A6
 
    RTS
 ; ------------------------------------------------------------------------------
@@ -243,31 +239,32 @@ TRIANGLE
     MOVEM.W (A7)+,D0-D4
     RTS
     
-    
+; ------------------------------------------------------------------------------
 ELEVATORUPDATE ; 1 = up 3 = down
-	MOVE.W D0, -(A7)
-	MOVE.W LOADEDMAP, D0
-	CMP #0, D0
-	BEQ ESMENU
-	MOVE.W (A7)+, D0
-	RTS
-ESMENU
-	MOVE.W (A7)+, D0
+; INPUT    : 
+; OUTPUT   : 
+; MODIFIES : 
+; ------------------------------------------------------------------------------
 	BTST #5, KBDVAL
-	BNE HLSEL
+	BNE .HLSEL
 	BTST #7, KBDVAL
-	BNE HVSEL
+	BNE .HVSEL
 	RTS
-HVSEL	;LOAD 1ST HEAVEN MAP
+.HVSEL	;LOAD 1ST HEAVEN MAP
+    MOVE.W  #2,(STANEXT)
 	MOVE.B #0, MUSICPLAYED ;TO BE ABLE TO LOAD HEAVEN MUSIC
 	MOVE.W #1, LOADEDMAP	
 	RTS
-HLSEL	;LOAD 1ST HELL MAP
+.HLSEL	;LOAD 1ST HELL MAP
+    MOVE.W  #2,(STANEXT)
 	MOVE.B #0, MUSICPLAYED ;TO BE ABLE TO LOAD HELL MUSIC
 	MOVE.W #5, LOADEDMAP
 	RTS
 	
 	    
+
+
+
 
 
 

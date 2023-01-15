@@ -3,15 +3,105 @@
 *-----------------------------------------------------------
 
 ; -----------------------------------------------------------------------------
+ISBLWHICHCOLL 
+; CHECKS IF THE BLOCK IN D4 PRODUCES COLLISIONS
+; INPUT    - D4.B
+; OUTPUT   - ALL 1'S IF D4.L PRODUCES COLLISIONS, ALL 0'S IF NOT
+; MODIFIES - D4.L, A0
+; -----------------------------------------------------------------------------
+            LEA.L   BLWHICHCOLL, A0
+.BNEXTCHCK  CMP.B   (A0),D4
+            BEQ.B   .BCOLL
+            TST.B   (A0)
+            BEQ.B   .BNOCOLL
+            ADDA.L  #1,A0
+            BRA     .BNEXTCHCK
+.BCOLL      ORI.L   #$FFFFFFFF, D4
+            BRA     .BEND
+.BNOCOLL    CLR.L   D0
+.BEND
+            RTS
+
+; -----------------------------------------------------------------------------
 BLKCOLL 
 ; DETECTS BLOCK COLLISIONS
-; INPUT    - D0 TOP LEFT CORNER OF OBJECT, D1 TOP RIGHT, D2 BOTTOM RIGHT, D3 BOTTOM LEFT
-; OUTPUT   - ALL 1'S IN THE REGISTER THAT COLLIDES WITH A BLOCK THAT CANNOT BE TRAVERSED
-; MODIFIES - D1, D2, D3, D4
+; INPUT    - D0 TOP LEFT CORNER OF OBJECT, D1 BOTTOM RIGHT, WHERE UPPER WORD
+;            IS THE X COORDINATE AND LOWER WORD Y COORDINATE
+; OUTPUT   - ALL 1'S IN THE THE REGISTER THAT COLLIDES WITH A BLOCK
+;            THAT CANNOT BE TRAVERSED. THESE ARE D0 FOR LEFT UPPER BLOCK,
+;            D1 FOR RIGHT UPPER BLOCK, D2 FOR LEFT LOWER BLOCK AND D3 FOR 
+;            RIGHT LOWER BLOCK
+; MODIFIES - D0.L, D1.L, D2.L, D3.L
 ; -----------------------------------------------------------------------------
-	RTS
-	
+            MOVEM.L D4-D5/A0,-(A7)
+            
+            MOVE.L  #16,D4
+            MOVE.W  D0,D2   ; D2 CONTAINS X LEFT
+            LSR.L   D4,D0   ; D0 CONTAINS Y UPPER
+            MOVE.W  D1,D3   ; D3 CONTAINS X RIGHT
+            LSR.L   D4,D1   ; D1 CONTAINS Y LOWER
+            
+            DIVU.W  #BLOCKSIZE,D0   ; UPPER BLOCK
+            DIVU.W  #BLOCKSIZE,D1   ; LOWER BLOCK
+            DIVU.W  #BLOCKSIZE,D2   ; LEFT BLOCK
+            DIVU.W  #BLOCKSIZE,D3   ; RIGHT BLOCK
+            
+            EXT.L   D0
+            EXT.L   D1
+            EXT.L   D2
+            EXT.L   D3
+            
+            MOVE.L  #BLOCKSROW+1,D4 ; +1 BECAUSE OF NULL
+            MULU.W  D0,D4           ; INDEX OF COLUMN OF UPPER LEFT AND RIGHT BLOCKS
+            MOVE.L  #BLOCKSROW+1,D5 ; +1 BECAUSE OF NULL
+            MULU.W  D1,D5           ; INDEX OF COLUMN OF LOWER LEFT AND RIGHT BLOCKS
+            
+            LEA.L   LOADEDMAP,A0
+            ADDA.L  D4,A0   
+            ADDA.L  D2,A0           ; LEFT UPPER BLOCK
+            MOVE.B  (A0),D0         ; STORING TOP LEFT BLOCK IN D0
+            
+            SUBA.L  D2,A0   
+            ADDA.L  D3,A0           ; RIGHT UPPER BLOCK
+            MOVE.B  (A0),D1         ; STORING TOP RIGHT BLOCK IN D1
+            
+            LEA.L   LOADEDMAP,A0
+            ADDA.L  D5,A0   
+            ADDA.L  D2,A0           ; LEFT LOWER BLOCK
+            MOVE.B  (A0),D2         ; STORING BOTTOM LEFT BLOCK IN D2
+            
+            LEA.L   LOADEDMAP,A0
+            ADDA.L  D5,A0   
+            ADDA.L  D3,A0           ; RIGHT LOWER BLOCK
+            MOVE.B  (A0),D3         ; STORING BOTTOM RIGHT BLOCK IN D3
+            
+            MOVE.B  D0,D4
+            JSR     ISBLWHICHCOLL
+            MOVE.L  D4,D0
+            
+            MOVE.B  D1,D4
+            JSR     ISBLWHICHCOLL
+            MOVE.L  D4,D1
+            
+            MOVE.B  D2,D4
+            JSR     ISBLWHICHCOLL
+            MOVE.L  D4,D2
+            
+            MOVE.B  D3,D4
+            JSR     ISBLWHICHCOLL
+            MOVE.L  D4,D3
+            
+            MOVEM.L (A7)+,D4-D5/A0
+            
+            RTS
+
+; -----------------------------------------------------------------------------
 MAPPLOT
+; INPUT    - 
+; OUTPUT   - 
+; MODIFIES - 
+; -----------------------------------------------------------------------------
+
 		MOVEM.L D0-D7, -(A7)
 		MOVEM.L A0-A6, -(A7)
 	       MOVE.W LOADEDMAP, D1
@@ -37,7 +127,12 @@ MAPSEL:
 	       JMP NEXT
 	       LEA HELL_ROOM, A0
 	       JMP NEXT
+; -----------------------------------------------------------------------------
 MAPUPD
+; INPUT    - 
+; OUTPUT   - 
+; MODIFIES - 
+; -----------------------------------------------------------------------------
 			
 			MOVE.W D0, -(A7)
 			MOVE.W LOADEDMAP, D0
@@ -646,6 +741,8 @@ MAPA8
 MAP8NODOOR1
 	MOVEM.W (A7)+, D0-D4
 	RTS
+
+
 
 
 
