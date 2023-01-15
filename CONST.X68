@@ -66,6 +66,12 @@ BLOCKSIZE   EQU     32                      ; BLOCK SIZE IN PIXELS
 COLBUTHL	EQU	    $000000CC
 COLBUTHV	EQU	    $00EEEEEE
 
+; --- INTRO RELATED CONSTANTS --------------------------------------------------
+
+BTONPOSX    EQU     SCRWIDTH/3
+BTONPOSY    EQU     SCRHEIGH-112
+BTONWIDTH   EQU     218
+BTONHEIGHT  EQU     32
 
 
 
