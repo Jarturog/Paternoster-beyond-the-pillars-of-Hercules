@@ -44,7 +44,7 @@ public class ImageToPixel {
                     count++;
                     if (count % 8 == 0) {
                         fw.write("\n");
-                    } else if (count % 8 != 0 && x != width - 1 && y != height - 1) {
+                    } else {
                         fw.write(", ");
                     }
                 }
