@@ -44,51 +44,93 @@ PROJUPD
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-            MOVEM.L  D0-D3,-(A7)
+
+            MOVEM.L  D0-D3/A2,-(A7)
+            ; CHECK OUTSIDE SCREEN
+            MOVE.W  (A0),D0
+            CMP.W   #SCRWIDTH,D0
+            BGT.W   .PROJCOLL
+            CMP.W   #0,D0
+            BLT.W   .PROJCOLL
+            MOVE.W  2(A0),D0
+            CMP.W   #SCRHEIGH,D0
+            BGT.W   .PROJCOLL
+            CMP.W   #0,D0
+            BLT.W   .PROJCOLL
+            ; ADD POSITION
             MOVE.L  4(A0),D0 ; COMO X E Y ESTÁN JUNTOS EN MEMORIA HAGO UNA SOLA OPERACIÓN LONG WORD
             ADD.W   D0,2(A0)
             LSR.L   #8,D0 ; LAS SUMAS SE TIENEN QUE HACER APARTE PARA QUE SI HAY OVERFLOW NO SE AFECTEN ENTRE ELLAS
             LSR.L   #8,D0
             ADD.W   D0,(A0) 
-            
             ; CHECK COLLISIONS
             ; TOP LEFT CORNER
             MOVE.W  (A0),D0
             LSL.L   #8,D0
             LSL.L   #8,D0
             MOVE.W  2(A0),D0
-            
+            ; BOTTOM RIGHT CORNER
             MOVE.W  (A0),D1
             ADD.W   #PROJWIDTH,D1
             LSL.L   #8,D1
             LSL.L   #8,D1
             MOVE.W  2(A0),D1
             ADD.W   #PROJHEIGHT,D1
-
+            ; COLLISIONS
+            LEA.L   BLWHICHCOLL,A2
             JSR BLKCOLL
             TST.L   D0
-            BNE.L   .PROJCOLL
+            BEQ.L   .PROJNOHIT  
             TST.L   D1
-            BNE.L   .PROJCOLL
+            BEQ.L   .PROJNOHIT  
             TST.L   D2
-            BNE.L   .PROJCOLL
+            BEQ.L   .PROJNOHIT  
             TST.L   D3
-            BNE.L   .PROJCOLL
-.PROJNOCOLL 
-            JSR     UTLCHCOLL ; CHECKS COLLISION BETWEEN OBSTACLE AND PROJECTILE
-            TST.B   D0
-            BEQ     .PROJNOHIT 
-            ADD.L   #8,A0 ;     PQ??????????????
-            JSR     OBSHIT  ; HITS OBSTACLE
-            MOVE.L  A1,A0 ; PQ ????????
-            
+            BEQ.L   .PROJNOHIT  
+
 .PROJCOLL   JSR AGLKILL
             SUB.W   #1,(NPROJ)
-            BRA     .PROJNOCOLL
-            
-.PROJNOHIT  MOVEM.L  (A7)+,D0-D3
+.PROJNOHIT  JSR PROJHITOBS ; CHECKS COLLISION WITH AN OBSTACLE
+            MOVEM.L  (A7)+,D0-D3/A2
             RTS
-            
+
+; ------------------------------------------------------------------------------
+PROJHITOBS
+; DESTROYS AN OBSTACLE IN CASE IT WAS HITTEN BY THE PROJECTILE. IT ALSO DELETES
+; THE PROJECTILE.
+; INPUT    : A0 POINTER TO THE INSTANCE VARIABLES  
+; OUTPUT   : NONE
+; MODIFIES : NONE
+; ------------------------------------------------------------------------------            
+
+            MOVEM.L A0-A1/D0-D7,-(A7)
+            MOVE.W  (A0),D2                 ; PREPARE SHOT COORDINATES FOR
+            MOVE.W  2(A0),D3                ; COLLISION CHECK
+            MOVE.W  #PROJWIDTH,D5
+            MOVE.W  #PROJHEIGHT,D7
+            MOVE.L  A0,A1
+            MOVE.W  #OBSTYPE,D0             ; LOOP THROUGH ALL ASTEROIDS
+            JSR     DMMFRSTO
+.LOOP       CMP.L   #0,A0
+            BEQ     .END
+            MOVE.W  8(A0),D0
+            MOVE.W  10(A0),D1
+            MOVE.W  #OBSWIDTH,D4
+            MOVE.W  #OBSHEIGHT,D6
+            JSR     UTLCHCOLL
+            TST.B   D0
+            BNE     .POCOLL                 ; IF COLLISION, EXPLODE IT
+            MOVE.W  #OBSTYPE,D0
+            JSR     DMMNEXTO
+            BRA     .LOOP
+.END        MOVEM.L (A7)+,A0-A1/D0-D7
+            RTS
+.POCOLL     ADD.L   #8,A0
+            JSR     HITOBS                  ; HIT OBSTACLE
+            MOVE.L  A1,A0
+            JSR     AGLKILL                 ; DESTROY SHOT
+          ;  ADD.W   #ASTSCORE,(PLRSCORE)    ; INCREASE SCORE
+            BRA     .END
 
 ; ------------------------------------------------------------------------------
 PROJPLOT 
@@ -121,6 +163,8 @@ PROJPLOT
             MOVE.L  (A7)+,D1	  
             MOVE.B  (A7)+,D0
             RTS
+
+
 
 
 

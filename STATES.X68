@@ -9,6 +9,11 @@ STAINIT
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
+            MOVE.W  D0,-(A7)
+            MOVE.W  #50,D0
+            TRAP    #15 ; CLOSE ALL FILES
+            MOVE.W  (A7)+,D0
+            
             MOVE.W  #STANONE,(STACUR)
             CLR.W   (STANEXT)
             RTS
@@ -38,7 +43,7 @@ STAUPD
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.INITBL     DC.L    STAEMPTY,ELEVATORINIT,GAMINIT,ENDGINIT
+.INITBL     DC.L    ISCINIT,ELEVATORINIT,GAMINIT,ENDGINIT
 .UPDTBL     DC.L    ISCUPD,ELEVATORUPDATE,GAMUPD,ENDGUPD
 
 ; -----------------------------------------------------------------------------
@@ -68,6 +73,9 @@ STAEMPTY
 ; NOTE     - JUST A PLACEHOLDER. NOTHING TO DO.
 ; -----------------------------------------------------------------------------
             RTS
+
+
+
 
 
 

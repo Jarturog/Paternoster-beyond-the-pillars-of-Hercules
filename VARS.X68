@@ -32,6 +32,7 @@ BPOSY1	    DC.W	0
 BPOSX2	    DC.W	32
 BPOSY2	    DC.W	32
 BLWHICHCOLL DC.B    2,3,0 ; BLOCKS WHICH PRODUCES COLLISIONS, ENDS WITH NULL
+BLWHICHNTRA DC.B    1,2,3,8,9,0 ; BLOCKS WHICH CANNOT BE TRAVERSED, ENDS WITH NULL
 
 ; --- MAP RELATED VARIABLES ----------------------------------------------------
 
@@ -50,6 +51,7 @@ REALFPS     DS.W    1
 STRFPS1     DC.B    'GOAL: ',0   ; THESE STRINGS MUST BE IN THIS ORDER IN MEMORY
 STRFPS2     DC.B    'FPS - ACTUAL: ',0
 STRFPS3     DC.B    'FPS',0
+            DS.W    0
 
 ; --- STATE RELATED VARIABLES --------------------------------------------------
 
@@ -59,6 +61,16 @@ STANEXT     DS.W    1                       ; NEXT STATE
 ; --- OBSTACLE RELATED VARIABLES -----------------------------------------------
 
 NOBS        DC.W    0                       ; NUMBER OF OBSTACLES
+
+; --- ENDGAME RELATED VARIABLES ------------------------------------------------
+
+SECONDS     DS.L    1       ; NUMBER OF SECONDS THAT HAVE PASSED
+            DC.W    0
+FILENAME    DC.B    'DATA/records.txt',0
+FILEBUFFER  DS.W    NBYTREAD/2
+RECORD      DS.L    1
+
+
 
 
 

@@ -72,12 +72,29 @@ BTONPOSX    EQU     SCRWIDTH/3
 BTONPOSY    EQU     SCRHEIGH-112
 BTONWIDTH   EQU     218
 BTONHEIGHT  EQU     32
+BMAPWIDTH   EQU     300
+BMAPHEIGH   EQU     200
+BMAPPOSX    EQU     SCRWIDTH/3
+BMAPPOSY    EQU     256
 
 ; --- OBSTACLE RELATED CONSTANTS -----------------------------------------------
 
 OBSWIDTH    EQU     32
 OBSHEIGHT   EQU     32
 MAXOBSXROOM EQU     8
+
+; --- AGENT RELATED CONSTANTS --------------------------------------------------
+
+PROJTYPE    EQU     1
+OBSTYPE     EQU     2
+
+; --- ENDGAME RELATED CONSTANTS ------------------------------------------------
+
+NBYTREAD    EQU     512
+LINELENGTH  EQU     4      ; LENGTH OF A LINE IN THE TEXT FILE
+
+
+
 
 
 

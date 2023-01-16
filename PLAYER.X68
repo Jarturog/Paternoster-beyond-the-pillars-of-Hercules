@@ -9,7 +9,7 @@ PLAYERUPD
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-            MOVEM.L D0-D3,-(A7)
+            MOVEM.L D0-D3/A2,-(A7)
 			; CHECK COLLISIONS
             ; TOP LEFT CORNER
             MOVE.W  (PLAYERPOSX),D0
@@ -24,6 +24,7 @@ PLAYERUPD
             MOVE.W  (PLAYERPOSY),D1
             ADD.W   #PLAYERHEIGHT,D1
             
+            LEA.L   BLWHICHCOLL,A2
             JSR BLKCOLL    
                             
 	        BTST #0, KBDVAL         ; SI NO VA HACIA LA IZQUIERDA
@@ -66,7 +67,7 @@ PLAYERUPD
 	        BRA .NODOWN             
 .DOWN       SUB.W   #PLAYERSPEED,(PLAYERPOSY)
 .NODOWN     
-            MOVEM.L (A7)+,D0-D3
+            MOVEM.L (A7)+,D0-D3/A2
             RTS
         
 ; ------------------------------------------------------------------------------
@@ -102,6 +103,8 @@ PLAYERPLOT
             MOVE.B  (A7)+,D0
   
 	  RTS
+
+
 
 
 

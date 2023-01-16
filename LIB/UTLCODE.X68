@@ -45,6 +45,38 @@ UTLPRINT
             RTS
 
 ; -----------------------------------------------------------------------------
+UTLPRINTNUM
+; PRINT SCREEN CENTERED NUMBER
+; INPUT    : D1.L CONTAINING THE NUMBER
+;            D0.B SCREEN ROW TO PRINT TEXT
+; OUTPUT   : NEXT ROW
+; MODIFIES : NONE (ASIDE OF OUTPUT)
+; -----------------------------------------------------------------------------
+            MOVEM.L D1-D4,-(A7)
+            
+            MOVE.W  D0,D4
+            MOVE.L  D1,D3
+            
+            MOVE.W  #1,D1
+            LSR.B   #1,D1
+            SUB.B   #(SCRWIDTH/UTLCHRWD)/2,D1
+            NEG.B   D1
+            ASL.W   #8,D1
+            OR.W    D0,D1
+            MOVE.B  #11,D0
+            TRAP    #15
+            MOVE.B  #10,D2
+            MOVE.W  #15,D0
+            MOVE.L  D3,D1
+            TRAP    #15
+            
+            MOVE.W  D4,D0
+            ADDQ.W  #1,D0 ; NEXT ROW
+            
+            MOVEM.L (A7)+,D1-D4
+            RTS
+
+; -----------------------------------------------------------------------------
 UTLCHCOLL
 ; CHECKS COLLISION
 ; INPUT    - D0.W X0 COORDINATE
@@ -126,6 +158,7 @@ UTLRAND
             DC.B    236, 127, 126, 3  , 207, 45 , 193, 2
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
+
 
 
 

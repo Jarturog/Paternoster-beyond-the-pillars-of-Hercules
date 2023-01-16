@@ -12,6 +12,12 @@ GAMINIT
             MOVEM.W D0-D5,-(A7)
             MOVEM.L A1-A3,-(A7)
             
+            MOVE.W  #60,D0
+            MOVE.W  #$0000,D1       ; TURNING OFF MOUSE
+            TRAP    #15
+            
+            CLR.L   (SECONDS)
+            
             JSR UTLRAND
             BRA .1STRTRY
 .1STROOM    SUB.W   #MAXOBSXROOM-1,D0
@@ -43,18 +49,13 @@ GAMINIT
             BGT.W   .4THROOM
             
             MOVE.W  D0,D4
-            ; TOTAL OBSTACLES
-
-            ADD.W   D2,D0
-            ADD.W   D3,D0
-            ADD.W   D5,D0
-            MOVE.W  D0,(NOBS)
-            MOVE.W  (LOADEDMAP),D1
+            
             ; AGLADD
+            MOVE.W  (LOADEDMAP),D1
             LEA     OBSINIT,A1
             LEA     STAEMPTY,A2
             LEA     OBSPLOT,A3
-            MOVE.W  #2,D0
+            MOVE.W  #OBSTYPE,D0
             
 .LOOP1      
             JSR     AGLADD
@@ -102,7 +103,7 @@ GAMUPD
             LEA     PROJINIT,A1
             LEA     PROJUPD,A2
             LEA     PROJPLOT,A3
-            MOVE.W  #1,D0
+            MOVE.W  #PROJTYPE,D0
             JSR     AGLADD
 .NOTFIRED
             JSR     AGLUPD
@@ -119,6 +120,9 @@ GAMPLOT
             JSR     BLOCKSPLOT  
             JSR     AGLPLOT
             BRA     PLAYERPLOT
+
+
+
 
 
 

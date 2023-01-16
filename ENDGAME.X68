@@ -9,9 +9,26 @@ ENDGINIT
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-
+            MOVEM.L D0-D1,-(A7)
+            
+            MOVE.W  #51,D0
+            LEA     FILENAME,A1 ; OPENS FILE
+            TRAP    #15
+            MOVE    #53,D0
+            LEA     FILEBUFFER,A1 ; READ FILE
+            MOVE.L  #NBYTREAD,D2
+            TRAP    #15
+            MOVE    #55,D0 ; POSITIONING CURSOR
+            TRAP    #15
+            MOVE.W  #54,D0
+            MOVE.W  #LINELENGTH,D2 ; WRITE SECONDS
+            LEA     SECONDS,A1
+            TRAP    #15
+            MOVE.W  #56,D0         ; CLOSE FILE
+            TRAP    #15
             ; GUARDAR SU RECORD EN UN FICHERO
             ; LEER FICHERO QUE GUARDE LOS RECORDS Y GUARDAR EN MEMORIA
+            MOVEM.L (A7)+,D0-D1
             RTS
 ; ------------------------------------------------------------------------------
 ENDGUPD
@@ -20,11 +37,10 @@ ENDGUPD
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-            MOVE.B  #61,D0          ; READ MOUSE
-            MOVE.B  #2,D1           ; MOUSE DOWN STATE
-            TRAP    #15
-            ANDI.B  #%00001111, D0  ; MIDDLE, DOUBLE, LEFT AND RIGHT MASK
-            BEQ.B   .DONE           ; IF NO CLICK
+            MOVE.B  (KBDVAL),D0
+            ANDI.B  #%00001111,D0
+            CMP.B   #%00001111,D0
+            BNE.B   .DONE
             MOVE.W  #1,(STANEXT)
 .DONE
             RTS
@@ -45,6 +61,19 @@ ENDGPLOT
             LEA     .TXT1,A0
             MOVE.B  #10,D0
             JSR     UTLPRINT
+            
+            MOVE.B  #14,D0
+            MOVE.L  (RECORD),D1
+            JSR     UTLPRINTNUM
+            
+            MOVE.B  #17,D0
+            LEA     FILEBUFFER,A0
+            MOVE.L  (A0),D1
+            
+.READRECORD JSR     UTLPRINTNUM
+            ADD.L   #LINELENGTH,A0
+            TST.L   (A0)
+            BNE     .READRECORD
             
             BTST.B  #8,(SCRCYCCT)
             BEQ     .NOTPRINT
@@ -67,6 +96,8 @@ ENDGPLOT
 .TXT2       DC.B    'CLICK ANYWHERE TO START',0
 .TXT3       DC.B    'HERE ARE THE BEST RECORDS',0
             DS.W    0
+
+
 
 
 

@@ -13,7 +13,7 @@ OBSINIT
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
 
-        MOVEM.L D0-D6,-(A7)
+        MOVEM.L D0-D6/A2,-(A7)
         
         MOVE.W  D1,4(A0)
 .OORANH JSR UTLRAND
@@ -40,6 +40,7 @@ OBSINIT
         
         MOVE.W  (LOADEDMAP),D6
         MOVE.W  4(A0),(LOADEDMAP)
+        LEA.L   BLWHICHNTRA,A2
         JSR BLKCOLL
         MOVE.W  D6,(LOADEDMAP)
         TST.L   D0
@@ -56,7 +57,7 @@ OBSINIT
         
         ADD.W   #1,(NOBS)
         
-        MOVEM.L (A7)+,D0-D6
+        MOVEM.L (A7)+,D0-D6/A2
         RTS
 
 ; ------------------------------------------------------------------------------
@@ -97,14 +98,18 @@ OBSPLOT
         RTS
         
 ; ------------------------------------------------------------------------------
-OBSHIT
-; DELETES AN OBSTACLE BECAUSE IT WAS HIT
+HITOBS
+; DESTROYS AN OBSTACLE
 ; INPUT    : A0 POINTING LOCAL MEMORY
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-        BRA     AGLKILL
-
+        JSR     AGLKILL
+        SUB.W   #1,(NOBS)
+        TST.W   (NOBS)      ; IF THERE IS NO MORE OBSTACLES
+        BNE.W   .NOTEND
+        MOVE.W  #3,(STANEXT)
+.NOTEND RTS
 
 
 *~Font name~Courier New~

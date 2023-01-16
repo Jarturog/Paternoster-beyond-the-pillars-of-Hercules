@@ -3,18 +3,18 @@
 *-----------------------------------------------------------
 
 ; -----------------------------------------------------------------------------
-ISBLWHICHCOLL 
-; CHECKS IF THE BLOCK IN D4 PRODUCES COLLISIONS
-; INPUT    - D4.B
+ISBLWHICHPROP 
+; CHECKS IF THE BLOCK IN D4 IS ONE OF A LIST IN A0 WITH AN SPECIFIC PROPERY
+; INPUT    - D4.B, A0.L
 ; OUTPUT   - ALL 1'S IF D4.L PRODUCES COLLISIONS, ALL 0'S IF NOT
 ; MODIFIES - D4.L, A0
 ; -----------------------------------------------------------------------------
-            LEA.L   BLWHICHCOLL, A0
-.BNEXTCHCK  TST.B   (A0)
+            
+.BNEXTCHCK  TST.B   (A2)
             BEQ.B   .BNOCOLL
-            CMP.B   (A0),D4
+            CMP.B   (A2),D4
             BEQ.B   .BCOLL
-            ADDA.L  #1,A0
+            ADDA.L  #1,A2
             BRA     .BNEXTCHCK
 .BCOLL      ORI.L   #$FFFFFFFF, D4
             BRA     .BEND
@@ -24,9 +24,11 @@ ISBLWHICHCOLL
 
 ; -----------------------------------------------------------------------------
 BLKCOLL 
-; DETECTS BLOCK COLLISIONS
+; DETECTS IF A RECTANGLE IN SPACE COLLIDES WITH BLOCKS IN A2'S LIST.
 ; INPUT    - D0 TOP LEFT CORNER OF OBJECT, D1 BOTTOM RIGHT, WHERE UPPER WORD
-;            IS THE X COORDINATE AND LOWER WORD Y COORDINATE
+;            IS THE X COORDINATE AND LOWER WORD Y COORDINATE.
+;            A2 IS THE LIST OF BLOCKS OF THE SAME PROPERTY THAT MATTERS
+;            WHEN CHECKING COLLISIONS.
 ; OUTPUT   - ALL 1'S IN THE THE REGISTER THAT COLLIDES WITH A BLOCK
 ;            THAT CANNOT BE TRAVERSED. THESE ARE D0 FOR LEFT UPPER BLOCK,
 ;            D1 FOR RIGHT UPPER BLOCK, D2 FOR LEFT LOWER BLOCK AND D3 FOR 
@@ -89,19 +91,19 @@ BLKCOLL
             MOVE.B  (A1),D0         ; STORING TOP LEFT BLOCK IN D0
             
             MOVE.B  D0,D4
-            JSR     ISBLWHICHCOLL
+            JSR     ISBLWHICHPROP 
             MOVE.L  D4,D0
             
             MOVE.B  D1,D4
-            JSR     ISBLWHICHCOLL
+            JSR     ISBLWHICHPROP 
             MOVE.L  D4,D1
             
             MOVE.B  D2,D4
-            JSR     ISBLWHICHCOLL
+            JSR     ISBLWHICHPROP 
             MOVE.L  D4,D2
             
             MOVE.B  D3,D4
-            JSR     ISBLWHICHCOLL
+            JSR     ISBLWHICHPROP 
             MOVE.L  D4,D3
             
             MOVEM.L (A7)+,D4-D6/A0-A1
@@ -447,6 +449,7 @@ ENDMAP
 	MOVEM.L (A7)+, D0-D7
 	RTS
 	
+
 
 
 
