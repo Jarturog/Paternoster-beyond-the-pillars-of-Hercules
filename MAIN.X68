@@ -15,7 +15,7 @@
             INCLUDE "LIB/AGLCODE.X68"
             INCLUDE "LIB/UTLCODE.X68"
             INCLUDE "BLOCKS.X68"
-            INCLUDE "MAPS.X68"
+            INCLUDE "MAP.X68"
             INCLUDE "ELEVATOR.X68"           
             INCLUDE "PLAYER.X68"    
             INCLUDE "PROJECTILE.X68"
@@ -64,8 +64,11 @@ START
             INCLUDE "VARS.X68"
             INCLUDE "LIB/UTLVARS.X68"
             INCLUDE "LIB/DMMVARS.X68"
+            INCLUDE "DATA/MAPDATA.X68"
+            INCLUDE "DATA/INTRODATA.X68"
 
             END     START
+
 
 
 

@@ -44,11 +44,12 @@ GAMPLOT
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-            JSR MAPPLOT     
+            JSR BLOCKSPLOT     
             TST.W   (NPROJ)
             BEQ     .NOPROJ2
             JSR     AGLPLOT
 .NOPROJ2    BRA     PLAYERPLOT
+
 
 
 
