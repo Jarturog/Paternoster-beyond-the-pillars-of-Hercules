@@ -38,7 +38,7 @@ public class ImageToPixel {
                     int blue = pixel & 0xff;
                     String hexPixel = String.format("$%02X%02X%02X", blue, green, red);
                     if (count % 8 == 0) {
-                        fw.write("DC.L ");
+                        fw.write(" DC.L ");
                     }
                     fw.write(hexPixel);
                     count++;
