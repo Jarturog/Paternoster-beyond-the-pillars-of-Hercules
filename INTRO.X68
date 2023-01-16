@@ -105,7 +105,7 @@ ISCPLOT
             ADDQ.W  #1,D3 ; NEXT COLUMN
             CMP.W   #BMAPWIDTH+BMAPPOSX,D1
             BNE     .KEEPGOING
-            MOVE.W  #BMAPPOSY+1,D3
+            MOVE.W  #BMAPPOSX+1,D3
             ADDQ.W  #1,D2 ; NEXT ROW
             CMP.W   #BMAPHEIGH+BMAPPOSY,D2
             BNE     .KEEPGOING
@@ -113,9 +113,10 @@ ISCPLOT
             MOVEM.L (A7)+,D0-D4/A0
 
             RTS
-.TITLE      DC.B    'PATERNOSTER: Beyond the pillars of Hercules',0
+.TITLE      DC.B    'PATERNOSTER: Beyond the pillars of Hercules',0 ; IN CASE THE IMAGE FAILS
 .HINT       DC.B    'CLICK HERE TO START',0
             DS.W    0
+
 
 
 
