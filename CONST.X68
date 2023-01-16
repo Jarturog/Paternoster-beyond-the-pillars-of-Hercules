@@ -24,7 +24,6 @@ KBDFDOWN	EQU		$28
 
 SCRUPTN     EQU     0                       ; SCREEN UPDATE TRAP NUMBER
 KBDUPTN     EQU     1                       ; KEYBOARD UPDATE TRAP NUMBER
-;no lo usas SNDPLTN     EQU     3                       ; SOUND PLAY TRAP NUMBER
 
 ; --- INTERRUPT NUMBERS --------------------------------------------------------
 
@@ -49,7 +48,7 @@ PROJSPEEDY      EQU     8
 HEAVENSOUND	    DC.B 'SND/MUSIC1.WAV',0
 ELEVATOR_MUSIC	DC.B 'SND/ELEVATOR_MUSIC.WAV',0
 HELLSOUND	    DC.B 'SND/MUSIC2.WAV',0
-PROJ_SOUND	    DC.B	'SND/PROJ_SOUND.WAV',0
+PROJ_SOUND	    DC.B 'SND/PROJ_SOUND.WAV',0
 
 ; --- STATE RELATED CONSTANTS --------------------------------------------------
 
@@ -88,10 +87,7 @@ MAXOBSXROOM EQU     8
 PROJTYPE    EQU     1
 OBSTYPE     EQU     2
 
-; --- ENDGAME RELATED CONSTANTS ------------------------------------------------
 
-NBYTREAD    EQU     512
-LINELENGTH  EQU     4      ; LENGTH OF A LINE IN THE TEXT FILE
 
 
 

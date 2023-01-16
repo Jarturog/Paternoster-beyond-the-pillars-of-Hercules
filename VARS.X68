@@ -64,18 +64,13 @@ NOBS        DC.W    0                       ; NUMBER OF OBSTACLES
 
 ; --- ENDGAME RELATED VARIABLES ------------------------------------------------
 
-SECONDS     DS.L    1       ; NUMBER OF SECONDS THAT HAVE PASSED
-            DC.W    0
-FILENAME    DC.B    'DATA/records.txt',0
-FILEBUFFER  DS.W    NBYTREAD/2
-RECORD      DS.L    1
-
-
-
-
-
-
-
+SECONDS     DS.B    1       ; NUMBER OF SECONDS THAT HAVE PASSED
+FILENAME    DC.B    'DATA/scores.txt',0
+            DS.W    0
+FILEBUFFER  DS.B    8
+FILESIZE    DC.B    8
+SCORE       DS.B    1
+            DS.W    0
 
 
 

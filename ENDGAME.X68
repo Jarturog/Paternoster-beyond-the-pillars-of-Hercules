@@ -9,28 +9,32 @@ ENDGINIT
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-            MOVEM.L D0-D1,-(A7)
+            MOVEM.L D0-D2,-(A7)
             
-            MOVE.L  (SECONDS),(RECORD)
+            MOVE.B  (SECONDS),(SCORE)
             
-            MOVE.W  #51,D0
+            MOVE.W  #52,D0
             LEA     FILENAME,A1 ; OPENS FILE
             TRAP    #15
-            MOVE    #53,D0
             LEA     FILEBUFFER,A1 ; READ FILE
-            MOVE.L  #NBYTREAD,D2
+            MOVE.L  #FILESIZE,D2
+            MOVE    #53,D0
             TRAP    #15
+            ADD.B   #1,(A1)
+            ADD.B   (A1),D2
             MOVE    #55,D0 ; POSITIONING CURSOR
             TRAP    #15
             MOVE.W  #54,D0
-            MOVE.W  #LINELENGTH,D2 ; WRITE SECONDS
-            LEA     RECORD,A1
+            MOVE.W  #1,D2 ; WRITE ONE BYTE
+            LEA     SECONDS,A1 ; WRITE SECONDS
             TRAP    #15
-            MOVE.W  #56,D0         ; CLOSE FILE
+            CLR.L   D2
+            MOVE    #55,D0 ; POSITIONING CURSOR
             TRAP    #15
-            ; GUARDAR SU RECORD EN UN FICHERO
-            ; LEER FICHERO QUE GUARDE LOS RECORDS Y GUARDAR EN MEMORIA
-            MOVEM.L (A7)+,D0-D1
+            MOVE.W  #56,D0 ; CLOSE FILE
+            TRAP    #15
+
+            MOVEM.L (A7)+,D0-D2
             RTS
 ; ------------------------------------------------------------------------------
 ENDGUPD
@@ -66,7 +70,8 @@ ENDGPLOT
             JSR     UTLPRINT
             
             MOVE.B  #14,D0
-            MOVE.L  (RECORD),D1
+            CLR.L   D1
+            MOVE.B  (SCORE),D1
             JSR     UTLPRINTNUM
             
             LEA     .TXT3,A0
@@ -75,15 +80,18 @@ ENDGPLOT
             
             MOVE.B  #20,D0
             LEA     FILEBUFFER,A0
-            MOVE.L  (A0),D1
+            ADDA    #1,A0
+            CLR.L   D1
+            MOVE.B  (A0),D1
             
-.READRECORD JSR     UTLPRINTNUM
-            ADD.L   #LINELENGTH,A0
-            MOVE.L  (A0),D1
-            TST.L   (A0)
-            BNE     .READRECORD
-            
-            BTST.B  #32,(SCRCYCCT)
+.READSCORES TST.B   (A0)
+            BMI     .PRINTEDALL
+            JSR     UTLPRINTNUM
+            MOVE.B  (A0)+,D1
+            TST.B   (A0)
+            BRA     .READSCORES
+.PRINTEDALL            
+            BTST.B  #4,(SCRINTFPS)
             BEQ     .NOTPRINT
             
             LEA     .TXT2,A0
@@ -92,9 +100,6 @@ ENDGPLOT
             
 .NOTPRINT
             
-            
-            ; MOSTRAR FICHERO QUE GUARDE LOS RECORDS
-            
             MOVEM.L (A7)+,D0-D1/A0
 
             RTS
@@ -102,6 +107,8 @@ ENDGPLOT
 .TXT2       DC.B    'HOLD THE NEXT KEYS TO REPLAY: W, A, S, D',0
 .TXT3       DC.B    'HERE ARE THE BEST RECORDS',0
             DS.W    0
+
+
 
 
 
