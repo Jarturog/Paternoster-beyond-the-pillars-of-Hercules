@@ -56,6 +56,10 @@ STRFPS3     DC.B    'FPS',0
 STACUR      DS.W    1                       ; CURRENT STATE
 STANEXT     DS.W    1                       ; NEXT STATE
 
+; --- OBSTACLE RELATED VARIABLES -----------------------------------------------
+
+NOBS        DC.W    0                       ; NUMBER OF OBSTACLES
+
 
 
 

@@ -33,7 +33,7 @@ BLKCOLL
 ;            RIGHT LOWER BLOCK
 ; MODIFIES - D0.L, D1.L, D2.L, D3.L
 ; -----------------------------------------------------------------------------
-            MOVEM.L D4-D6/A0,-(A7)
+            MOVEM.L D4-D6/A0-A1,-(A7)
             
             MOVE.L  #16,D4
             MOVE.W  D0,D2   ; D2 CONTAINS X LEFT
@@ -104,7 +104,7 @@ BLKCOLL
             JSR     ISBLWHICHCOLL
             MOVE.L  D4,D3
             
-            MOVEM.L (A7)+,D4-D6/A0
+            MOVEM.L (A7)+,D4-D6/A0-A1
             
             RTS
 
@@ -447,6 +447,7 @@ ENDMAP
 	MOVEM.L (A7)+, D0-D7
 	RTS
 	
+
 
 
 *~Font name~Fixedsys~

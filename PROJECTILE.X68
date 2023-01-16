@@ -74,13 +74,22 @@ PROJUPD
             BNE.L   .PROJCOLL
             TST.L   D3
             BNE.L   .PROJCOLL
-.PROJNOCOLL             
-            MOVEM.L  (A7)+,D0-D3
-            RTS
+.PROJNOCOLL 
+            JSR     UTLCHCOLL ; CHECKS COLLISION BETWEEN OBSTACLE AND PROJECTILE
+            TST.B   D0
+            BEQ     .PROJNOHIT 
+            ADD.L   #8,A0 ;     PQ??????????????
+            JSR     OBSHIT  ; HITS OBSTACLE
+            MOVE.L  A1,A0 ; PQ ????????
             
 .PROJCOLL   JSR AGLKILL
             SUB.W   #1,(NPROJ)
             BRA     .PROJNOCOLL
+            
+.PROJNOHIT  MOVEM.L  (A7)+,D0-D3
+            RTS
+            
+
 ; ------------------------------------------------------------------------------
 PROJPLOT 
 ; PLOTS THE PROJECTILE.
@@ -112,6 +121,7 @@ PROJPLOT
             MOVE.L  (A7)+,D1	  
             MOVE.B  (A7)+,D0
             RTS
+
 
 
 

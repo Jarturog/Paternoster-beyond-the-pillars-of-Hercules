@@ -24,6 +24,7 @@
             INCLUDE "GAME.X68"
             INCLUDE "INTRO.X68"
             INCLUDE "ENDGAME.X68"
+            INCLUDE "OBSTACLE.X68"
 START
 
 ; --- INITIALIZATION -----------------------------------------------------------

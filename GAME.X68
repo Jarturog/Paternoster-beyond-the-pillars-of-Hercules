@@ -3,6 +3,81 @@
 ; ==============================================================================
 
 ; ------------------------------------------------------------------------------
+GAMINIT
+; INITIALIZES THE GAME
+; INPUT    : NONE
+; OUTPUT   : NONE
+; MODIFIES : NONE
+; ------------------------------------------------------------------------------
+            MOVEM.W D0-D5,-(A7)
+            MOVEM.L A1-A3,-(A7)
+            
+            JSR UTLRAND
+            BRA .1STRTRY
+.1STROOM    SUB.W   #MAXOBSXROOM-1,D0
+.1STRTRY    CMP.W   #MAXOBSXROOM,D0
+            BGT.W   .1STROOM
+            
+            MOVE.W  D0,D5
+            
+            JSR UTLRAND
+            BRA .2NDRTRY
+.2NDROOM    SUB.W   #MAXOBSXROOM-1,D0
+.2NDRTRY    CMP.W   #MAXOBSXROOM,D0
+            BGT.W   .2NDROOM
+            
+            MOVE.W  D0,D2
+            
+            JSR UTLRAND
+            BRA .3RDRTRY
+.3RDROOM    SUB.W   #MAXOBSXROOM-1,D0
+.3RDRTRY    CMP.W   #MAXOBSXROOM,D0
+            BGT.W   .3RDROOM
+            
+            MOVE.W  D0,D3
+            
+            JSR UTLRAND
+            BRA .4THRTRY
+.4THROOM    SUB.W   #MAXOBSXROOM-1,D0
+.4THRTRY    CMP.W   #MAXOBSXROOM,D0
+            BGT.W   .4THROOM
+            
+            MOVE.W  D0,D4
+            ; TOTAL OBSTACLES
+
+            ADD.W   D2,D0
+            ADD.W   D3,D0
+            ADD.W   D5,D0
+            MOVE.W  D0,(NOBS)
+            MOVE.W  (LOADEDMAP),D1
+            ; AGLADD
+            LEA     OBSINIT,A1
+            LEA     STAEMPTY,A2
+            LEA     OBSPLOT,A3
+            MOVE.W  #2,D0
+            
+.LOOP1      
+            JSR     AGLADD
+            DBRA.W  D5,.LOOP1
+            
+            ADDQ.W  #1,D1
+.LOOP2      JSR     AGLADD
+            DBRA.W  D2,.LOOP2
+            
+            ADDQ.W  #1,D1
+.LOOP3      JSR     AGLADD
+            DBRA.W  D3,.LOOP3
+        
+            ADDQ.W  #1,D1
+.LOOP4      JSR     AGLADD
+            DBRA.W  D4,.LOOP4
+
+            MOVEM.L (A7)+,A1-A3
+            MOVEM.W (A7)+,D0-D5
+            RTS
+            
+
+; ------------------------------------------------------------------------------
 GAMUPD
 ; UPDATES THE GAME
 ; INPUT    : NONE
@@ -30,10 +105,7 @@ GAMUPD
             MOVE.W  #1,D0
             JSR     AGLADD
 .NOTFIRED
-            TST.W   (NPROJ)
-            BEQ     .NOPROJ1
             JSR     AGLUPD
-.NOPROJ1
             MOVEM.L (A7)+,D0/A1-A3
             RTS
 
@@ -44,11 +116,12 @@ GAMPLOT
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; ------------------------------------------------------------------------------
-            JSR BLOCKSPLOT     
-            TST.W   (NPROJ)
-            BEQ     .NOPROJ2
+            JSR     BLOCKSPLOT  
             JSR     AGLPLOT
-.NOPROJ2    BRA     PLAYERPLOT
+            BRA     PLAYERPLOT
+
+
+
 
 
 

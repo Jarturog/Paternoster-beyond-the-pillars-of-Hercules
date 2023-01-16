@@ -45,6 +45,39 @@ UTLPRINT
             RTS
 
 ; -----------------------------------------------------------------------------
+UTLCHCOLL
+; CHECKS COLLISION
+; INPUT    - D0.W X0 COORDINATE
+;            D1.W Y0 COORDINATE
+;            D2.W X1 COORDINATE
+;            D3.W Y1 COORDINATE
+;            D4.W WIDTH 0
+;            D5.W WIDTH 1
+;            D6.W HEIGHT 0
+;            D7.W HEIGHT 1
+; OUTPUT   - D0.B=FF - COLLISION, =0 - NO COLLISION
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            MOVEM.W D4-D7,-(A7)
+            ADD.W   D0,D4
+            CMP.W   D2,D4
+            BLE     .NOCOL
+            ADD.W   D2,D5
+            CMP.W   D0,D5
+            BLE     .NOCOL
+            ADD.W   D1,D6
+            CMP.W   D3,D6
+            BLE     .NOCOL
+            ADD.W   D3,D7
+            CMP.W   D1,D7
+            BLE     .NOCOL
+            MOVE.B  #$FF,D0
+            BRA     .END
+.NOCOL      CLR.B   D0
+.END        MOVEM.W (A7)+,D4-D7
+            RTS
+
+; -----------------------------------------------------------------------------
 UTLRAND
 ; PROVIDES A PSEUDO-RANDOM BYTE
 ; INPUT    - NONE
@@ -93,6 +126,8 @@ UTLRAND
             DC.B    236, 127, 126, 3  , 207, 45 , 193, 2
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
+
+
 
 *~Font name~Fixedsys~
 *~Font size~24~

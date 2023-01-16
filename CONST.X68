@@ -73,6 +73,15 @@ BTONPOSY    EQU     SCRHEIGH-112
 BTONWIDTH   EQU     218
 BTONHEIGHT  EQU     32
 
+; --- OBSTACLE RELATED CONSTANTS -----------------------------------------------
+
+OBSWIDTH    EQU     32
+OBSHEIGHT   EQU     32
+MAXOBSXROOM EQU     8
+
+
+
+
 
 
 
