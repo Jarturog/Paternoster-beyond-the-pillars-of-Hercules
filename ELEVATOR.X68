@@ -1,6 +1,6 @@
 ELEVATORINIT
-    BRA 	AUDINIT
-
+    *BRA 	AUDINIT
+    RTS
 ELEVATORPLOT
 	
 	MOVEM.L D0-D7/A0-A6,-(A7)
@@ -246,7 +246,12 @@ ELEVATORUPDATE ; 1 = up 3 = down
 ; OUTPUT   : 
 ; MODIFIES : 
 ; ------------------------------------------------------------------------------
-    JSR  ELEVATORMUSIC	
+    ; CHECK IF MUSIC IS ALREADY PLAYING	
+	CMP #1, (MUSICPLAYED)
+	BEQ .NOMUS
+	JSR ELEVATORMUSIC
+; GENERAL UPDATES
+.NOMUS
 	BTST #5, KBDVAL
 	BNE .HLSEL
 	BTST #7, KBDVAL
@@ -264,6 +269,8 @@ ELEVATORUPDATE ; 1 = up 3 = down
 	RTS
 	
 	    
+
+
 
 
 

@@ -14,6 +14,8 @@ STAINIT
             TRAP    #15 ; CLOSE ALL FILES
             MOVE.W  (A7)+,D0
             
+            JSR     AUDINIT
+            
             MOVE.W  #STANONE,(STACUR)
             CLR.W   (STANEXT)
             RTS
@@ -73,6 +75,7 @@ STAEMPTY
 ; NOTE     - JUST A PLACEHOLDER. NOTHING TO DO.
 ; -----------------------------------------------------------------------------
             RTS
+
 
 
 

@@ -43,7 +43,7 @@ START
 
 ; UPDATE GAME LOGIC
 
-            JSR     STAUPD
+              JSR     STAUPD
 
 ; --- SYNC ---------------------------------------------------------------------
 
@@ -69,6 +69,7 @@ START
             INCLUDE "DATA/INTRODATA.X68"
 
             END     START
+
 
 
 

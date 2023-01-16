@@ -62,9 +62,10 @@ MSCSEL:
 		   
 		   JMP HELLMUSIC
 		   
+		   JMP HELLMUSIC
+		   
 	       JMP HELLMUSIC
 	       
-	       JMP HELLMUSIC
 	       
 
 ELEVATORMUSIC
@@ -111,6 +112,7 @@ FIREDSOUND
 	MOVEM.W (A7)+, A0-A1
 	MOVEM.W (A7)+, D0-D2
 	RTS
+
 
 *~Font name~Fixedsys~
 *~Font size~9~

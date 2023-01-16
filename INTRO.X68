@@ -14,9 +14,9 @@ ISCINIT
             MOVE.W  #60,D0
             MOVE.W  #$0105,D1       ; TURNING ON MOUSE MOVEMENT AND DOWN
             TRAP    #15
-
+            
             MOVEM.L (A7)+,D0-D1
-
+            RTS
 ; ------------------------------------------------------------------------------
 ISCUPD
 ; INTRO SCREEN UPDATE
@@ -116,6 +116,7 @@ ISCPLOT
 .TITLE      DC.B    'PATERNOSTER: Beyond the pillars of Hercules',0
 .HINT       DC.B    'CLICK HERE TO START',0
             DS.W    0
+
 
 
 
